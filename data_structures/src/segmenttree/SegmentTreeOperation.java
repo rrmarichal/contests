@@ -1,4 +1,4 @@
-package contests.segment;
+package segmenttree;
 
 public interface SegmentTreeOperation<T> {
     

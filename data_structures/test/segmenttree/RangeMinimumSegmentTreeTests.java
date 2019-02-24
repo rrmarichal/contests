@@ -1,4 +1,4 @@
-package contests.segment;
+package segmenttree;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,25 +6,6 @@ import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
-
-class IntegerMinimumOperation implements SegmentTreeOperation<Integer> {
-
-    @Override
-    public Integer aggregate(Integer left, Integer right) {
-        return Math.min(left, right);
-    }
-
-    @Override
-    public Integer update(Integer current, Integer update) {
-        return current + update;
-    }
-
-    @Override
-    public Integer nil() {
-        return Integer.MAX_VALUE;
-    }
-
-}
 
 public class RangeMinimumSegmentTreeTests {
 

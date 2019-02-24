@@ -1,4 +1,4 @@
-package contests.fenwick;
+package fenwicktree;
 
 public class FenwickTree {
     
@@ -32,8 +32,7 @@ public class FenwickTree {
     }
 
     /**
-     * Internal Fenwick array indices from [1-size].
-     * @param size
+     * Internal Fenwick array indices from [1..size].
      */
     private FenwickTree(int size) {
         tree = new long[size + 1];

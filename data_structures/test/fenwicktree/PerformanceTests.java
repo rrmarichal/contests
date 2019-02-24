@@ -1,4 +1,4 @@
-package contests.fenwick;
+package fenwicktree;
 
 import java.util.Random;
 
@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+@Ignore("Do not run compute intensive tests by default.")
 public class PerformanceTests {
 
     private static final int SIZE = 1<<20;

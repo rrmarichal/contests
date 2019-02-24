@@ -1,12 +1,10 @@
-package contests.fenwick;
+package fenwicktree;
 
 import static org.junit.Assert.*;
 
 import java.util.Random;
 
 import org.junit.*;
-
-import contests.fenwick.FenwickTree;
 
 public class ValueFenwickTreeTests {
 
