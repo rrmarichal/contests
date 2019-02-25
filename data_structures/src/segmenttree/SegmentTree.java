@@ -9,7 +9,7 @@ public class SegmentTree<T> {
             throw new IllegalArgumentException("Invalid argument (values is null).");
         }
         if (CHECKED && operation == null) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("Invalid argument (operation is null).");
         }
         return new SegmentTree<T>(values, operation);
     }
@@ -41,11 +41,11 @@ public class SegmentTree<T> {
 		if (low > node.getHigh() || high < node.getLow()) {
             return operation.nil();
         }
-        // Check for full overlap
+        // Check for full overlap.
         if (node.getLow() >= low && node.getHigh() <= high) {
             return node.getValue();
         }
-        // Partial overlap
+        // Partial overlap.
         T lv = _value(node.getLeft(), low, high);
         T rv = _value(node.getRight(), low, high);
         return operation.aggregate(lv, rv);

@@ -21,6 +21,15 @@ public class RangeMinimumArraySegmentTreeTests {
     }
 
     @Test
+    public void nextPowerOfTwoTests() {
+        assertEquals(1, tree.nextPowerOfTwo(0));
+        assertEquals(2, tree.nextPowerOfTwo(1));
+        assertEquals(4, tree.nextPowerOfTwo(2));
+        assertEquals(8, tree.nextPowerOfTwo(6));
+        assertEquals(64, tree.nextPowerOfTwo(41));
+    }
+
+    @Test
     public void sumsTest0() {
         int result = tree.value(0, values.length - 1);
         assertEquals(MINUMUM, result);
