@@ -6,3 +6,5 @@
 **/obj/
 **/.settings/
 **/.vscode/
+*.in
+*.out

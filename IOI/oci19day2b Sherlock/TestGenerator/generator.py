@@ -9,7 +9,8 @@ class Config:
 def main():
   # config = Config(10, 10, 10)
   # config = Config(10**5, 10**5, 10**6)
-  config = Config(10**4, 10**4, 10**6)
+  config = Config(5 * 10**4, 5 * 10**4, 10**6)
+  # config = Config(10**4, 10**4, 10**6)
   
   out = open('%d.in' % config.N, 'w+')
 

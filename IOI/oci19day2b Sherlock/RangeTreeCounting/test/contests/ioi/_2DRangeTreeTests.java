@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class _2DRangeTreeTests {
@@ -133,6 +134,7 @@ public class _2DRangeTreeTests {
     }
 
     @Test
+    @Ignore("Only for performance measures purposes.")
     public void randomTest2() {
         int maxPoints = 100000;
         int maxQueries = maxPoints * (int) Math.sqrt(maxPoints);

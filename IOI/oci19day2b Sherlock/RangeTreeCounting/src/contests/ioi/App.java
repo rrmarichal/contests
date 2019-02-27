@@ -60,15 +60,6 @@ class _2DPointEx {
 
 }
 
-class AboveOrEqualPointComparator implements Comparator<_2DPointEx> {
-
-    @Override
-    public int compare(_2DPointEx o1, _2DPointEx o2) {
-        return Integer.compare(o1.point.y, o2.point.y);
-    }
-
-}
-
 class SortedArray {
 
 	public static SortedArray create(_2DPointEx[] points) {
@@ -83,8 +74,6 @@ class SortedArray {
 
     /**
      * Return number of points greater than or equal to y.
-     * 
-     * Find first y' >= y.
      */
 	public int aboveOrEqual(int y) {
         int low = 0, high = points.length;
@@ -105,8 +94,6 @@ class SortedArray {
     
     /**
      * Return number of points less than or equal to y.
-     * 
-     * Find first y' >= y.
      */
     public int belowOrEqual(int y) {
         int low = -1, high = points.length - 1;
@@ -303,32 +290,110 @@ class _2DRangeTree {
 
 }
 
+class QueryInfoComparator implements Comparator<QueryInfo> {
+
+    private int sqrtN;
+
+    public QueryInfoComparator(int sqrtN) {
+        this.sqrtN = sqrtN;
+    }
+
+    @Override
+    public int compare(QueryInfo o1, QueryInfo o2) {
+        int slot1 = o1.L / sqrtN;
+        int slot2 = o2.L / sqrtN;
+        if (slot1 == slot2) {
+            return Integer.compare(o1.R, o2.R);
+        }
+        return Integer.compare(slot1, slot2);
+    }
+
+}
+
+class QueryInfo { 
+    int L, R, index;
+
+    public QueryInfo(int L, int R, int index) {
+        this.L = L;
+        this.R = R;
+        this.index = index;
+    }
+
+}
+
 public class App {
 
-	public int[] solve(int[] A, int[][] queries) {
-		return null;
+	public long[] solve(int[] A, QueryInfo[] queries) {
+        int sqrtN = (int) Math.sqrt(A.length);
+        // Sort the queries using sqrt(N) slots arrangement.
+        Arrays.sort(queries, new QueryInfoComparator(sqrtN));
+        // Create the 2DRangeTree with items as points.
+        _2DPoint[] points = new _2DPoint[A.length];
+        for (int j = 0; j < A.length; j++) {
+            points[j] = new _2DPoint(j, A[j]);
+        }
+        _2DRangeTree tree = _2DRangeTree.create(points);
+        long[] result = new long[queries.length];
+        int left = 0, right = 0;
+        long inversions = 0;
+        for (int j = 0; j < queries.length; j++) {
+            if (j == 0 || queries[j].L / sqrtN != queries[j-1].L / sqrtN) {
+                left = queries[j].L;
+                right = -1;
+            }
+            if (left != queries[j].L) {
+                // Move left pointer to the left.
+                if (queries[j].L < left) {
+                    while (queries[j].L < left) {
+                        inversions += tree.query(left, right, A[left - 1] - 1, true);
+                        left--;
+                    }
+                }
+                // Move left pointer to the right.
+                else {
+                    while (queries[j].L > left) {
+                        inversions -= tree.query(left + 1, right, A[left] - 1, true);
+                        left++;
+                    }
+                }
+            }
+            if (right == -1) {
+                inversions = 0;
+                right = left;
+            }
+            // Move the right pointer to reach the query interval right coordinate.
+            while (right < queries[j].R) {
+                inversions += tree.query(left, right, A[right + 1] + 1, false);
+                right++;
+            }
+            result[queries[j].index] = inversions;
+        }
+        return result;
     }
     
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         PrintWriter pw = new PrintWriter(System.out);
+        long inputStart = System.currentTimeMillis();
         int N = sc.nextInt();
         int[] A = new int[N];
         for (int j=0; j < N; j++) {
             A[j] = sc.nextInt();
         }
+        long processStart = System.currentTimeMillis();
         App app = new App();
         int Q = sc.nextInt();
-        int[][] queries = new int[Q][2];
+        QueryInfo[] queries = new QueryInfo[Q];
         for (int j = 0; j < Q; j++) {
             int L = sc.nextInt(), R = sc.nextInt();
-            queries[j][0] = L-1;
-            queries[j][1] = R-1;
+            queries[j] = new QueryInfo(L-1, R-1, j);
         }
-        pw.println(app.solve(A, queries));
+        long[] inversions = app.solve(A, queries);
+        long outputStart = System.currentTimeMillis();
+        for (long inv: inversions) pw.println(inv);
+        pw.println(String.format("\nInput: %d. Process: %d. Output: %d", processStart - inputStart, outputStart - processStart, System.currentTimeMillis() - outputStart));
         pw.close();
         sc.close();
-
     }
 
 }
