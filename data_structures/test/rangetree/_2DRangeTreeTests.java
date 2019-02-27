@@ -144,6 +144,33 @@ public class _2DRangeTreeTests {
         int count = tree.query(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
         assertEquals(linearCounter(points, 0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE), count);
     }
+
+    @Test
+    public void randomTest2() {
+        int maxPoints = 10000;
+        int maxQueries = maxPoints * (int) Math.sqrt(maxPoints);
+        Random random = new Random();
+        _2DPoint[] points = new _2DPoint[maxPoints];
+        for (int j = 0; j < maxPoints; j++) {
+            points[j] = new _2DPoint(random.nextInt(1000000), random.nextInt(maxPoints));
+        }
+        _2DRangeTree tree = _2DRangeTree.create(points);
+        int[][] queries = new int[maxQueries][4];
+        for (int j = 0; j < maxQueries; j++) {
+            int x1 = random.nextInt(1000000), x2 = random.nextInt(1000000),
+                y1 = random.nextInt(maxPoints), y2 = random.nextInt(maxPoints);
+            queries[j][0] = Math.min(x1, x2);
+            queries[j][1] = Math.min(y1, y2);
+            queries[j][2] = Math.max(x1, x2);
+            queries[j][3] = Math.max(y1, y2);
+        }
+        int[] queriesResults = new int[maxQueries];
+        long start = System.currentTimeMillis();
+        for (int j = 0; j < maxQueries; j++) {
+            queriesResults[j] = tree.query(queries[j][0], queries[j][1], queries[j][2], queries[j][3]);
+        }
+        System.out.println(String.format("randomTest2 %d queries in %d milis.", maxQueries, System.currentTimeMillis() - start));
+    }
     
     private int linearCounter(_2DPoint[] points, int x1, int y1, int x2, int y2) {
         int count = 0;
