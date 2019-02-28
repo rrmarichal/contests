@@ -174,6 +174,6 @@ public class ResetFenwickTree {
         else {
             total = cummulativeValues[tree.length - 1];
         }
-	}
+    }
     
 }
