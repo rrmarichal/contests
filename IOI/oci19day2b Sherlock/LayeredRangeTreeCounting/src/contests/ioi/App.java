@@ -143,13 +143,8 @@ class LayeredSortedArray {
 
     public LayerPointer aboveOrEqual(int y) {
         int low = 0, high = points.length;
-        while (true) {
-            if (low == high) {
-                return low < points.length
-                    ? lowerBoundLayer[low]
-                    : new LayerPointer(Integer.MAX_VALUE, Integer.MAX_VALUE);
-            }
-            int mid = (low + high) >> 1;
+        while (low < high) {
+            int mid = (low + high) / 2;
             if (y <= points[mid].point.y) {
                 high = mid;
             }
@@ -157,6 +152,9 @@ class LayeredSortedArray {
                 low = mid + 1;
             }
         }
+        return low < points.length
+            ? lowerBoundLayer[low]
+            : new LayerPointer(Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
     
     public int aboveOrEqualFromParentPointer(int offset) {
@@ -168,13 +166,8 @@ class LayeredSortedArray {
      */
     public LayerPointer belowOrEqual(int y) {
         int low = -1, high = points.length - 1;
-        while (true) {
-            if (low == high) {
-                return low >= 0
-                    ? upperBoundLayer[low]
-                    : new LayerPointer(Integer.MIN_VALUE, Integer.MIN_VALUE);
-            }
-            int mid = (1 + low + high) >> 1;
+        while (low < high) {
+            int mid = (1 + low + high) / 2;
             if (y >= points[mid].point.y) {
                 low = mid;
             }
@@ -182,6 +175,9 @@ class LayeredSortedArray {
                 high = mid - 1;
             }
         }
+        return low >= 0
+            ? upperBoundLayer[low]
+            : new LayerPointer(Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
     
     public int belowOrEqualFromParentPointer(int offset) {
@@ -319,45 +315,6 @@ class LayeredRangeTree {
         return x1 <= leaf.getPoint().x && leaf.getPoint().x <= x2 && leaf.getPoint().y <= y;
     }
 
-    public int cleanBelowOrEqual(int x1, int x2, int y) {
-        LayeredRangeTreeNode split = findSplitNode(x1, x2);
-        if (split.isLeaf()) {
-            return isLeafBelowOrEqual(split, x1, x2, y) ? 1 : 0;
-        }
-        // Follow the path to x1 and call aboveOrEqual(y) on the subtrees right of the path.
-        LayeredRangeTreeNode v = split.left;
-        int count = 0;
-        while (!v.isLeaf()) {
-            if (x1 <= v.getPoint().x) {
-                count++;
-                v = v.left;
-            }
-            else {
-                v = v.right;
-            }
-        }
-        // Check if we need to report he leaf @ x1.
-        if (x1 <= v.getPoint().x && isLeafBelowOrEqual(v, x1, x2, y)) {
-            count++;
-        }
-        // Follow the path to x2 and call below(y) on the subtrees left of the path.
-        v = split.right;
-        while (!v.isLeaf()) {
-            if (x2 >= v.getPoint().x) {
-                count++;
-                v = v.right;
-            }
-            else {
-                v = v.left;
-            }
-        }
-        // Check if we need to report he leaf @ x2.
-        if (x2 >= v.getPoint().x && isLeafBelowOrEqual(v, x1, x2, y)) {
-            count++;
-        }
-        return count;
-    }
-
     public int belowOrEqual(int x1, int x2, int y) {
         LayeredRangeTreeNode split = findSplitNode(x1, x2);
         if (split.isLeaf()) {
@@ -380,7 +337,7 @@ class LayeredRangeTree {
             }
         }
         // Check if we need to report he leaf @ x1.
-        if (x1 <= v.getPoint().x && isLeafBelowOrEqual(v, x1, x2, y)) {
+        if (isLeafBelowOrEqual(v, x1, x2, y)) {
             count++;
         }
         // Follow the path to x2 and call below(y) on the subtrees left of the path.
@@ -398,7 +355,7 @@ class LayeredRangeTree {
             }
         }
         // Check if we need to report he leaf @ x2.
-        if (x2 >= v.getPoint().x && isLeafBelowOrEqual(v, x1, x2, y)) {
+        if (isLeafBelowOrEqual(v, x1, x2, y)) {
             count++;
         }
         return count;
@@ -406,45 +363,6 @@ class LayeredRangeTree {
 
     private boolean isLeafAboveOrEqual(LayeredRangeTreeNode leaf, int x1, int x2, int y) {
         return x1 <= leaf.getPoint().x && leaf.getPoint().x <= x2 && leaf.getPoint().y >= y;
-    }
-
-    public int cleanAboveOrEqual(int x1, int x2, int y) {
-        LayeredRangeTreeNode split = findSplitNode(x1, x2);
-        if (split.isLeaf()) {
-            return isLeafAboveOrEqual(split, x1, x2, y) ? 1 : 0;
-        }
-        // Follow the path to x1 and call aboveOrEqual(y) on the subtrees right of the path.
-        LayeredRangeTreeNode v = split.left;
-        int count = 0;
-        while (!v.isLeaf()) {
-            if (x1 <= v.getPoint().x) {
-                count++;
-                v = v.left;
-            }
-            else {
-                v = v.right;
-            }
-        }
-        // Check if we need to report he leaf @ x1.
-        if (x1 <= v.getPoint().x && isLeafAboveOrEqual(v, x1, x2, y)) {
-            count++;
-        }
-        // Follow the path to x2 and call below(y) on the subtrees left of the path.
-        v = split.right;
-        while (!v.isLeaf()) {
-            if (x2 >= v.getPoint().x) {
-                count++;
-                v = v.right;
-            }
-            else {
-                v = v.left;
-            }
-        }
-        // Check if we need to report he leaf @ x2.
-        if (x2 >= v.getPoint().x && isLeafAboveOrEqual(v, x1, x2, y)) {
-            count++;
-        }
-        return count;
     }
 
     public int aboveOrEqual(int x1, int x2, int y) {
@@ -469,7 +387,7 @@ class LayeredRangeTree {
             }
         }
         // Check if we need to report he leaf @ x1.
-        if (x1 <= v.getPoint().x && isLeafAboveOrEqual(v, x1, x2, y)) {
+        if (isLeafAboveOrEqual(v, x1, x2, y)) {
             count++;
         }
         // Follow the path to x2 and call below(y) on the subtrees left of the path.
@@ -487,7 +405,7 @@ class LayeredRangeTree {
             }
         }
         // Check if we need to report he leaf @ x2.
-        if (x2 >= v.getPoint().x && isLeafAboveOrEqual(v, x1, x2, y)) {
+        if (isLeafAboveOrEqual(v, x1, x2, y)) {
             count++;
         }
         return count;
@@ -579,13 +497,11 @@ public class App {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         PrintWriter pw = new PrintWriter(System.out);
-        long inputStart = System.currentTimeMillis();
         int N = sc.nextInt();
         int[] A = new int[N];
         for (int j=0; j < N; j++) {
             A[j] = sc.nextInt();
         }
-        long processStart = System.currentTimeMillis();
         App app = new App();
         int Q = sc.nextInt();
         QueryInfo[] queries = new QueryInfo[Q];
@@ -594,9 +510,7 @@ public class App {
             queries[j] = new QueryInfo(L-1, R-1, j);
         }
         long[] inversions = app.solve(A, queries);
-        long outputStart = System.currentTimeMillis();
         for (long inv: inversions) pw.println(inv);
-        pw.println(String.format("\nInput: %d. Process: %d. Output: %d", processStart - inputStart, outputStart - processStart, System.currentTimeMillis() - outputStart));
         pw.close();
         sc.close();
     }
