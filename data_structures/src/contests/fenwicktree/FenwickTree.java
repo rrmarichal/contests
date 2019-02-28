@@ -5,6 +5,7 @@ public class FenwickTree {
     private static final boolean CHECKED = true;
 
     private long[] tree;
+    private long total;
     
     public static FenwickTree empty(int size) {
         if (CHECKED && size < 0) {
@@ -39,6 +40,7 @@ public class FenwickTree {
     }
 
     private void init(int value) {
+        total = (this.tree.length - 1) * value;
         for (int j = 1; j < tree.length; j++) {
             tree[j] = value * (j&-j);
         }
@@ -50,6 +52,7 @@ public class FenwickTree {
             cummulative[j] = cummulative[j - 1] + values[j-1];
             tree[j] = cummulative[j] - cummulative[j - (j&-j)];
         }
+        total = cummulative[tree.length - 1];
     }
 
     /**
@@ -95,6 +98,7 @@ public class FenwickTree {
      * Increment item at <code>index</code> by <code>value</code>.
      */
     public void increment(int index, int value) {
+        total += value;
         if (CHECKED && index < 0) {
             throw new IllegalArgumentException("Invalid argument (index < 0).");
         }
@@ -102,6 +106,10 @@ public class FenwickTree {
             throw new IllegalArgumentException("Invalid argument (index > length).");
         }
         _increment(index + 1, value);
+    }
+
+    public long getTotal() {
+        return total;
     }
     
 }

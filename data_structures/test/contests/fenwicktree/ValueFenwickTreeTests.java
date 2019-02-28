@@ -40,4 +40,23 @@ public class ValueFenwickTreeTests {
         assertEquals(SIZE * value + increment, tree.sum(0, SIZE - 1));
     }
 
+    @Test
+    public void totalTest0() {
+        assertEquals(value * SIZE, tree.getTotal());
+        tree.increment(random.nextInt(SIZE), 1);
+        tree.increment(random.nextInt(SIZE), 2);
+        tree.increment(random.nextInt(SIZE), 3);
+        assertEquals(value * SIZE + 6L, tree.getTotal());
+    }
+
+    @Test
+    public void totalTest1() {
+        assertEquals(value * SIZE, tree.getTotal());
+        int value1 = Integer.MAX_VALUE;
+        int value2 = Integer.MAX_VALUE;
+        tree.increment(random.nextInt(SIZE), value1);
+        tree.increment(random.nextInt(SIZE), value2);
+        assertEquals(value * SIZE + (long)value1 + value2, tree.getTotal());
+    }
+
 }

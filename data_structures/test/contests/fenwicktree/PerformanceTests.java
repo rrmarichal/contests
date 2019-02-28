@@ -9,9 +9,9 @@ import org.junit.Test;
 @Ignore("Do not run compute intensive tests by default.")
 public class PerformanceTests {
 
-    private static final int SIZE = 1<<20;
-    private static final int INCREMENT_OPERATIONS = 1<<22;
-    private static final int SUM_OPERATIONS = 1<<22;
+    private static final int SIZE = (int) 1e6;
+    private static final int INCREMENT_OPERATIONS = (int) (1e5 * Math.sqrt(1e5));
+    private static final int SUM_OPERATIONS = (int) (1e5 * Math.sqrt(1e5));
 
     private FenwickTree tree;
     private Random random;
@@ -24,16 +24,16 @@ public class PerformanceTests {
 
     @Test
     public void incrementMultipleTest() {
-        int[] incrementValues = new int[INCREMENT_OPERATIONS];
+        int[] incrementIndices = new int[INCREMENT_OPERATIONS];
         for (int j = 0; j < INCREMENT_OPERATIONS; j++) {
-            incrementValues[j] = random.nextInt();
+            incrementIndices[j] = random.nextInt(SIZE);
         }
         long start = System.currentTimeMillis();
         for (int j = 0; j < INCREMENT_OPERATIONS; j++)
-            tree.increment(j, incrementValues[j]);
+            tree.increment(incrementIndices[j], 1);
         System.out.println(
-            String.format("contests.fenwick.PerformanceTests.incrementMultipleTest. Elapsed: %d",
-                System.currentTimeMillis() - start));
+            String.format("contests.fenwick.PerformanceTests.incrementMultipleTest. Elapsed: %d milis. Total: %d",
+                System.currentTimeMillis() - start, tree.getTotal()));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class PerformanceTests {
             total += tree.sum(sumRanges[j][0], sumRanges[j][1]);
         }
         System.out.println(
-            String.format("contests.fenwick.PerformanceTests.sumMultipleTest. Elapsed: %d. Total: %d",
+            String.format("contests.fenwick.PerformanceTests.sumMultipleTest. Elapsed: %d milis. Total: %d",
                 System.currentTimeMillis() - start, total));
     }
     
