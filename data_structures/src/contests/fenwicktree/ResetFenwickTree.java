@@ -1,5 +1,12 @@
 package contests.fenwicktree;
 
+/**
+ * Fenwick tree with reset feature.
+ * 
+ * The <code>reset</code> operation restores the initial state of the tree.
+ * Runs in O(1) and lazily propagates its effect on subsequent operations
+ * to <code>sum</code> and <code>increment</code>.
+ */
 public class ResetFenwickTree {
     
     enum InitializationType {
