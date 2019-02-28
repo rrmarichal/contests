@@ -5,34 +5,43 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 
-class FenwickTree {
+class ResetFenwickTree {
     
-    private static final boolean CHECKED = false;
-
-    private long[] tree;
-    private long total;
-    
-    public static FenwickTree empty(int size) {
-        if (CHECKED && size < 0) {
-            throw new IllegalArgumentException("Invalid tree size (size < 0).");
-        }
-        return new FenwickTree(size);
+    enum InitializationType {
+        Empty, Value, Values
     }
 
-    public static FenwickTree withValue(int size, int value) {
+    private static final boolean CHECKED = false;
+
+    private long[] tree, cummulativeValues;
+    private int[] version;
+    private long total;
+    private int currentVersion, initialValue;
+    private InitializationType initializationType;
+    
+    public static ResetFenwickTree empty(int size) {
         if (CHECKED && size < 0) {
             throw new IllegalArgumentException("Invalid tree size (size < 0).");
         }
-        FenwickTree result = new FenwickTree(size);
+        ResetFenwickTree result = new ResetFenwickTree(size);
+        result.init();
+        return result;
+    }
+
+    public static ResetFenwickTree withValue(int size, int value) {
+        if (CHECKED && size < 0) {
+            throw new IllegalArgumentException("Invalid tree size (size < 0).");
+        }
+        ResetFenwickTree result = new ResetFenwickTree(size);
         result.init(value);
         return result;
     }
 
-    public static FenwickTree withValues(int[] values) {
+    public static ResetFenwickTree withValues(int[] values) {
         if (CHECKED && values == null) {
             throw new IllegalArgumentException("Invalid argument (values is null).");
         }
-        FenwickTree result = new FenwickTree(values.length);
+        ResetFenwickTree result = new ResetFenwickTree(values.length);
         result.init(values);
         return result;
     }
@@ -40,24 +49,46 @@ class FenwickTree {
     /**
      * Internal Fenwick array indices from [1..size].
      */
-    private FenwickTree(int size) {
+    private ResetFenwickTree(int size) {
+        version = new int[size + 1];
         tree = new long[size + 1];
     }
 
+    private void init() {
+        initializationType = InitializationType.Empty;
+        total = 0;
+    }
+
     private void init(int value) {
-        total = (this.tree.length - 1) * value;
+        initializationType = InitializationType.Value;
+        initialValue = value;
         for (int j = 1; j < tree.length; j++) {
             tree[j] = value * (j&-j);
         }
+        total = (this.tree.length - 1) * value;
     }
 
     private void init(int[] values) {
-        long[] cummulative = new long[values.length+1];
+        initializationType = InitializationType.Values;
+        cummulativeValues = new long[values.length+1];
         for (int j = 1; j < tree.length; j++) {
-            cummulative[j] = cummulative[j - 1] + values[j-1];
-            tree[j] = cummulative[j] - cummulative[j - (j&-j)];
+            cummulativeValues[j] = cummulativeValues[j - 1] + values[j-1];
+            tree[j] = cummulativeValues[j] - cummulativeValues[j - (j&-j)];
         }
-        total = cummulative[tree.length - 1];
+        total = cummulativeValues[tree.length - 1];
+    }
+
+    private long getInitialValue(int index) {
+        if (initializationType == InitializationType.Empty) {
+            return 0;
+        }
+        else
+        if (initializationType == InitializationType.Value) {
+            return initialValue * (index&-index);
+        }
+        else {
+            return cummulativeValues[index] - cummulativeValues[index - (index&-index)];
+        }
     }
 
     /**
@@ -66,7 +97,13 @@ class FenwickTree {
     private long _sum(int index) {
         long sum = 0;
         while (index > 0) {
-            sum += tree[index];
+            if (version[index] == currentVersion) {
+                sum += tree[index];
+            }
+            else {
+                sum += tree[index] = getInitialValue(index);
+                version[index] = currentVersion;
+            }
             index -= index&-index;
         }
         return sum;
@@ -77,7 +114,13 @@ class FenwickTree {
      */
     private void _increment(int index, int value) {
         while (index < tree.length) {
-            tree[index] += value;
+            if (version[index] == currentVersion) {
+                tree[index] += value;
+            }
+            else {
+                tree[index] = getInitialValue(index) + value;
+                version[index] = currentVersion;
+            }
             index += index&-index;
         }
     }
@@ -117,6 +160,20 @@ class FenwickTree {
         return total;
     }
 
+	public void reset() {
+        currentVersion++;
+        if (initializationType == InitializationType.Empty) {
+            total = 0;
+        }
+        else
+        if (initializationType == InitializationType.Value) {
+            total = (this.tree.length - 1) * initialValue;
+        }
+        else {
+            total = cummulativeValues[tree.length - 1];
+        }
+    }
+    
     public long belowOrEqual(int index) {
         return sum(0, index);
     }
@@ -166,14 +223,14 @@ public class App {
         int sqrtN = (int) Math.sqrt(A.length);
         // Sort the queries using sqrt(N) slots arrangement.
         Arrays.sort(queries, new QueryInfoComparator(sqrtN));
-        FenwickTree tree = null;
+        ResetFenwickTree tree = ResetFenwickTree.empty(MAX + 1);
         long[] result = new long[queries.length];
         int left = 0, right = 0;
         long inversions = 0;
         for (int j = 0; j < queries.length; j++) {
             if (j == 0 || queries[j].L / sqrtN != queries[j-1].L / sqrtN) {
-                // Reset fenwick tree 🙄
-                tree = FenwickTree.empty(MAX + 1);
+                // Reset fenwick tree.
+                tree.reset();
                 inversions = 0;
                 tree.increment(A[left = right = queries[j].L], 1);
             }

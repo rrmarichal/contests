@@ -1,5 +1,6 @@
 package contests.ioi;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
@@ -26,10 +27,7 @@ public class AppTests {
             new QueryInfo(0, 6, 3)
         };
         long[] result = app.solve(A, Q);
-        assertEquals(4, result[0]);
-        assertEquals(2, result[1]);
-        assertEquals(0, result[2]);
-        assertEquals(14, result[3]);
+        assertArrayEquals(new long[] { 4, 2, 0, 14 }, result);
     }
 
     @Test
