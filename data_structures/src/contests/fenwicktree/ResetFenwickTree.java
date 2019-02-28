@@ -162,7 +162,7 @@ public class ResetFenwickTree {
         return total;
     }
 
-	public void reset() {
+    public void reset() {
         currentVersion++;
         if (initializationType == InitializationType.Empty) {
             total = 0;
