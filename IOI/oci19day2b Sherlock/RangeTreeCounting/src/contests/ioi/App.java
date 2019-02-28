@@ -374,13 +374,11 @@ public class App {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         PrintWriter pw = new PrintWriter(System.out);
-        long inputStart = System.currentTimeMillis();
         int N = sc.nextInt();
         int[] A = new int[N];
         for (int j=0; j < N; j++) {
             A[j] = sc.nextInt();
         }
-        long processStart = System.currentTimeMillis();
         App app = new App();
         int Q = sc.nextInt();
         QueryInfo[] queries = new QueryInfo[Q];
@@ -389,9 +387,7 @@ public class App {
             queries[j] = new QueryInfo(L-1, R-1, j);
         }
         long[] inversions = app.solve(A, queries);
-        long outputStart = System.currentTimeMillis();
         for (long inv: inversions) pw.println(inv);
-        pw.println(String.format("\nInput: %d. Process: %d. Output: %d", processStart - inputStart, outputStart - processStart, System.currentTimeMillis() - outputStart));
         pw.close();
         sc.close();
     }
