@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>contests.ioi</groupId>
-  <artifactId>cows</artifactId>
+  <artifactId>pairs</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <name>cows</name>
