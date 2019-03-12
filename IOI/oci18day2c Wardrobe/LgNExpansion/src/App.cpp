@@ -6,9 +6,10 @@
 using namespace std;
 
 struct Segment {
-    int id, index, gcd;
+    int id, index;
+    long gcd;
     Segment() {}
-    Segment(int _id, int _index, int _gcd) : id(_id), index(_index), gcd(_gcd) {}
+    Segment(int _id, int _index, long _gcd) : id(_id), index(_index), gcd(_gcd) {}
 };
 
 const int _oo = -1e9;
@@ -18,6 +19,7 @@ vector<long> A, T;
 list<Segment> compressed;
 
 void print_compressed() {
+    cout << "compressed" << endl;
     for (auto it = compressed.begin(); it != compressed.end(); it++) {
         cout << it->gcd << " " << it->index << " " << it->id << endl;
     }
@@ -48,21 +50,40 @@ void expand(int index) {
     // print_compressed();
 }
 
+long max(int index, int low, int high) {
+    // cout << "max: " << index << " " << low << " " << high << endl;
+    if (low >= high) {
+        return 0;
+    }
+    return *max_element(T.begin() + low, T.begin() + high);
+}
+
+
 void update(int index) {
-    int R = (index + 1) % D;
-    T[index] = _oo;
-    for (auto it = compressed.begin(); it != compressed.end(); it++) {
-        if (index - it->index + 1 < D) {
-            continue;
+    if (index < D-1) {
+        T[index] = _oo;
+        return;
+    }
+    if (index < 2*D-1) {
+        T[index] = compressed.back().gcd;
+        return;
+    }
+    auto it = compressed.begin();
+    while (index - it->index + 1 < D) {
+        it++;
+    }
+    T[index] = it->gcd + T[index - D];
+    int high = index - D + 1;
+    for (; it != compressed.end(); it++) {
+        int low = it->index;
+        if (low < index - 2*D) {
+            low = index - 2*D;
         }
-        int back = it->index - 1;
-        if (index - it->index + 1 > D + R) {
-            back = index - D - R;
-        }
-        int tback = back < 0 ? 0 : T[back];
+        long tback = max(index, low, high);
         if (T[index] < it->gcd + tback) {
             T[index] = it->gcd + tback;
         }
+        high = low;
     }
 }
 
