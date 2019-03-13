@@ -2,39 +2,23 @@
 #include <algorithm>
 #include <vector>
 #include <list>
+#include <cmath>
 
 using namespace std;
 
-struct Segment {
+struct GCDSegment {
     int id, index;
     long gcd;
-    Segment() {}
-    Segment(int _id, int _index, long _gcd) : id(_id), index(_index), gcd(_gcd) {}
+    GCDSegment() {}
+    GCDSegment(int _id, int _index, long _gcd) : id(_id), index(_index), gcd(_gcd) {}
 };
 
-const int _oo = -1e9;
-
-int D;
-vector<long> A, T;
-list<Segment> compressed;
-
-void print_compressed() {
-    cout << "compressed" << endl;
-    for (auto it = compressed.begin(); it != compressed.end(); it++) {
-        cout << it->gcd << " " << it->index << " " << it->id << endl;
-    }
-    cout << endl;
-}
-
-void print_table() {
-    for (int j = 0; j < T.size(); j++) {
-        cout << T[j] << " ";
-    }
-    cout << endl;
-}
+int D, tsize;
+vector<long> A, T, tree;
+list<GCDSegment> compressed;
 
 void expand(int index) {
-    compressed.push_front(Segment(index, index, A[index]));
+    compressed.push_front(GCDSegment(index, index, A[index]));
     auto current = compressed.begin();
     for (auto it = ++compressed.begin(); it != compressed.end(); it++) {
         it->gcd = __gcd(current->gcd, it->gcd);
@@ -43,27 +27,46 @@ void expand(int index) {
         }
         current->index = it->index;
         current->gcd = it->gcd;
+        if (index - current->index > 2*D) {
+            break;
+        }
     }
     while (current->id != compressed.back().id) {
         compressed.pop_back();
     }
-    // print_compressed();
 }
 
-long max(int index, int low, int high) {
-    // cout << "max: " << index << " " << low << " " << high << endl;
-    if (low >= high) {
+long interval_max(int low, int high) {
+    if (low > high) {
         return 0;
     }
-    return *max_element(T.begin() + low, T.begin() + high);
+    int keyLow = tsize + low, keyHigh = tsize + high;
+    long result = max(tree[keyLow], tree[keyHigh]);
+    for (; keyLow >> 1 != keyHigh >> 1; keyLow >>= 1, keyHigh >>= 1) {
+        int lowParentKey = keyLow >> 1;
+        int highParentKey = keyHigh >> 1;
+        if (lowParentKey << 1 == keyLow) {
+            result = max(result, tree[(lowParentKey << 1) + 1]);
+        }
+        if ((highParentKey << 1) + 1 == keyHigh) {
+            result = max(result, tree[highParentKey << 1]);
+        }
+    }
+    return result;
 }
 
-
-void update(int index) {
-    if (index < D-1) {
-        T[index] = _oo;
-        return;
+void update_tree(int index) {
+    int key = tsize + index;
+    tree[key] = T[index];
+    do {
+        key = key >> 1;
+        tree[key] = max(tree[key<<1], tree[(key<<1) + 1]);
     }
+    while (key > 0);
+}
+
+void update_table(int index) {
+    if (index < D-1) return;
     if (index < 2*D-1) {
         T[index] = compressed.back().gcd;
         return;
@@ -73,27 +76,35 @@ void update(int index) {
         it++;
     }
     T[index] = it->gcd + T[index - D];
-    int high = index - D + 1;
+    int high = index - D;
     for (; it != compressed.end(); it++) {
         int low = it->index;
-        if (low < index - 2*D) {
-            low = index - 2*D;
-        }
-        long tback = max(index, low, high);
+        long tback = interval_max(low, high);
         if (T[index] < it->gcd + tback) {
             T[index] = it->gcd + tback;
         }
-        high = low;
+        high = low - 1;
     }
+}
+
+int nextPowerOfTwo(int value) {
+    int lg = (int) log2(value);
+    if ((1 << lg) == value) {
+        return value;
+    }
+    return 1 << (lg + 1);
 }
 
 long solve() {
     T.resize(A.size(), 0);
-    for (int j = 0; j < A.size(); j++) {
+    // Initialize the segment tree.
+    tsize = nextPowerOfTwo(T.size());
+    tree.resize(2 * tsize, 0);
+    for (size_t j = 0; j < A.size(); j++) {
         expand(j);
-        update(j);
+        update_table(j);
+        update_tree(j);
     }
-    // print_table();
     return T[A.size() - 1];
 }
 
