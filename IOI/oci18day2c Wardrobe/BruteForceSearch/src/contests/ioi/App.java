@@ -56,7 +56,7 @@ public class App {
                 long b = search(chunks, shift - j, current + 1);
                 if (b > max) {
                     max = b;
-                    // printDist(dist, max);
+                    printDist(dist, max);
                 }
                 best = Math.max(best, b);
             }
