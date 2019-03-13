@@ -86,7 +86,7 @@ public class ArraySegmentTree<T> {
         if (CHECKED && low < 0) {
             throw new IllegalArgumentException("Invalid range (low < 0).");
         }
-        if (CHECKED && high >= tree.length) {
+        if (CHECKED && high >= size) {
             throw new IllegalArgumentException("Invalid range (high > length).");
         }
         return _value(low, high, 0, 0, size - 1);
@@ -99,7 +99,7 @@ public class ArraySegmentTree<T> {
         if (CHECKED && index < 0) {
             throw new IllegalArgumentException("Invalid argument (index < 0).");
         }
-        if (CHECKED && index >= tree.length) {
+        if (CHECKED && index >= size) {
             throw new IllegalArgumentException("Invalid argument (index > length).");
         }
         _increment(0, size - 1, 0, index, value);

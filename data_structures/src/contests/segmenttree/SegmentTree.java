@@ -36,9 +36,9 @@ public class SegmentTree<T> {
             low, high, operation.aggregate(left.getValue(), right.getValue()), left, right);
     }
 
-	private T _value(SegmentTreeNode<T> node, int low, int high) {
+    private T _value(SegmentTreeNode<T> node, int low, int high) {
         // If no intersection, return default value.
-		if (low > node.getHigh() || high < node.getLow()) {
+        if (low > node.getHigh() || high < node.getLow()) {
             return operation.nil();
         }
         // Check for full overlap.

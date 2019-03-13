@@ -67,7 +67,7 @@ public class ResetFenwickTree {
         for (int j = 1; j < tree.length; j++) {
             tree[j] = value * (j&-j);
         }
-        total = (this.tree.length - 1) * value;
+        total = (tree.length - 1) * value;
     }
 
     private void init(int[] values) {
