@@ -1,0 +1,1 @@
+Use DP. S[j][d] equals the number of arithmetic sequences ending @ j with interval d.
