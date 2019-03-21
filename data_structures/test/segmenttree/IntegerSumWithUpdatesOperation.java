@@ -11,8 +11,8 @@ class IntegerSumWithUpdatesOperation implements SegmentTreeOperation<Integer> {
      * Define the update operation as setting the current value.
      */
     @Override
-    public Integer update(Integer current, Integer update) {
-        return update;
+    public Integer transform(Integer current, Integer value) {
+        return value;
     }
     
     @Override

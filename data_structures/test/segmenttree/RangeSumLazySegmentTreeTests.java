@@ -7,9 +7,7 @@ import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 
-public class RangeMaximumLazySegmentTreeTests {
-
-    private static final int MAXIMUM = 100;
+public class RangeSumLazySegmentTreeTests {
 
     private Integer[] values;
     private LazySegmentTree<Integer> tree;
@@ -17,77 +15,61 @@ public class RangeMaximumLazySegmentTreeTests {
 
     @Before
     public void init() {
-        operation = new LazyIntegerMaximumOperation();
-        values = new Integer[] { 1, 2, 3, 4, MAXIMUM, 6, 7, 8 };
+        operation = new LazyIntegerSumOperation();
+        values = new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8 };
         tree = LazySegmentTree.create(values, operation);
     }
 
     @Test
-    public void nextPowerOfTwoTests() {
-        assertEquals(1, tree.nextPowerOfTwo(0));
-        assertEquals(2, tree.nextPowerOfTwo(1));
-        assertEquals(4, tree.nextPowerOfTwo(2));
-        assertEquals(8, tree.nextPowerOfTwo(6));
-        assertEquals(64, tree.nextPowerOfTwo(41));
-    }
-
-    @Test
-    public void maximumTest0() {
+    public void sumTest0() {
         int result = tree.value(0, values.length - 1);
-        assertEquals(MAXIMUM, result);
+        assertEquals(36, result);
     }
 
     @Test
     public void maximumTest1() {
         int index = new Random().nextInt(values.length);
         int result = tree.value(0, index);
-        assertEquals(index < 4 ? index + 1 : MAXIMUM, result);
+        assertEquals((index + 1) * (index + 2) / 2, result);
     }
 
     @Test
-    public void decrementAtOtherThanMaximumDoesNotChangeMaximumTest() {
-        int maximum = tree.value(0, values.length - 1);
-        tree.increment(3, 3, -10);
-        assertEquals(maximum, (int) tree.value(0, values.length - 1));
-    }
-
-    @Test
-    public void incrementByTheMaximumTest() {
-        int maximum = tree.value(0, values.length - 1);
-        tree.increment(4, 4, MAXIMUM);
-        assertEquals(maximum + maximum, (int) tree.value(0, values.length - 1));
+    public void unitaryIncrementTest() {
+        int sum = tree.value(0, values.length - 1);
+        tree.increment(4, 4, 10);
+        assertEquals(sum + 10, (int) tree.value(0, values.length - 1));
     }
 
     @Test
     public void rangeIncrementTest0() {
-        int maximum = tree.value(0, values.length - 1);
-        int delta = new Random().nextInt((int) 1e9);
+        int sum = tree.value(0, values.length - 1);
+        int delta = new Random().nextInt((int) 10);
         tree.increment(0, values.length - 1, delta);
-        assertEquals(maximum + delta, (int) tree.value(0, values.length - 1));
+        assertEquals(sum + values.length * delta, (int) tree.value(0, values.length - 1));
     }
 
     @Test
     public void rangeIncrementTest1() {
-        int maximum = tree.value(0, values.length - 1);
+        int sum = tree.value(0, values.length - 1);
         int delta1 = new Random().nextInt((int) 1e8);
         tree.increment(0, 6, delta1);
         int delta2 = new Random().nextInt((int) 1e8);
         tree.increment(3, 5, delta2);
-        assertEquals(maximum + delta1 + delta2, (int) tree.value(0, values.length - 1));
+        assertEquals(sum + 7 * delta1 + 3 * delta2, (int) tree.value(0, values.length - 1));
     }
 
     @Test
     public void customArrayTest() {
         values = new Integer[] { 9, 5, 8, 4  };
         tree = LazySegmentTree.create(values, operation);
-        assertEquals(8, (int) tree.value(1, 3));
+        assertEquals(5 + 8 + 4, (int) tree.value(1, 3));
     }
 
     @Test
     public void randomQueriesWithUnitaryUpdatesTest() {
         final int SIZE = 1000;
-        final int OPERATIONS = 100;
-        final int MAX_VALUE = Integer.MAX_VALUE;
+        final int OPERATIONS = 1000;
+        final int MAX_VALUE = (int) 1e6;
         Random random = new Random();
         Integer[] values = new Integer[SIZE];
         for (int j = 0; j < SIZE; j++) {
@@ -107,10 +89,10 @@ public class RangeMaximumLazySegmentTreeTests {
                 // Query op.
                 int low = random.nextInt(SIZE),
                     high = low + random.nextInt(SIZE - low);
-                int tmax = tree.value(low, high);
-                int bmax = bruteForce(values, low, high);
-                // System.out.println(String.format("Query operation from [%d..%d] => tmax: '%d', bmax='%d'.", low, high, tmax, bmax));
-                assertEquals(bmax, tmax);
+                int tsum = tree.value(low, high);
+                int bsum = bruteForce(values, low, high);
+                // System.out.println(String.format("Query operation from [%d..%d] => tsum: '%d', bsum='%d'.", low, high, tsum, bsum));
+                assertEquals(bsum, tsum);
             }
         }
     }
@@ -119,7 +101,7 @@ public class RangeMaximumLazySegmentTreeTests {
     public void randomQueriesWithRangeUpdatesTest() {
         final int SIZE = 1000;
         final int OPERATIONS = 1000;
-        final int MAX_VALUE = 1000;
+        final int MAX_VALUE = 100;
         Random random = new Random();
         Integer[] values = new Integer[SIZE];
         for (int j = 0; j < SIZE; j++) {
@@ -142,10 +124,10 @@ public class RangeMaximumLazySegmentTreeTests {
                 // Query op.
                 int low = random.nextInt(SIZE),
                     high = low + random.nextInt(SIZE - low);
-                int tmax = tree.value(low, high);
-                int bmax = bruteForce(values, low, high);
-                // System.out.println(String.format("Query operation from [%d..%d] => tmax: '%d', bmax='%d'.", low, high, tmax, bmax));
-                assertEquals(bmax, tmax);
+                int tsum = tree.value(low, high);
+                int bsum = bruteForce(values, low, high);
+                // System.out.println(String.format("Query operation from [%d..%d] => tsum: '%d', bsum='%d'.", low, high, tsum, bsum));
+                assertEquals(bsum, tsum);
             }
         }
     }

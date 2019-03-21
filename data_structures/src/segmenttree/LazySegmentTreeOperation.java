@@ -8,9 +8,19 @@ public interface LazySegmentTreeOperation<T> {
     T aggregate(T left, T right);
 
     /**
-     * Update element with value <code>current</code> to <code>update</code>.
+     * Transforms the element with value of <code>current</code> applying a new value of <code>value</code>.
+     * @param current original value.
+     * @param value value to apply for the transformation.
      */
-    T update(T current, T update);
+    T transform(T current, T value);
+
+    /**
+     * Transforms the element with value of <code>current</code> applying a new value of <code>value</code>.
+     * @param current original value.
+     * @param value value to apply for the transformation.
+     * @param size size of the subtree where the transforamtion is being applied.
+     */
+    T transform(T current, T value, int size);
     
     /**
      * Operation's null element.

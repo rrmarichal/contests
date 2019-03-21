@@ -62,7 +62,7 @@ public class ArraySegmentTree<T> {
 
     private void _increment(int low, int high, int key, int index, T value) {
         if (low == high) {
-            tree[key] = operation.update(tree[key], value);
+            tree[key] = operation.transform(tree[key], value);
         }
         else {
             int mid = (low + high)/2;

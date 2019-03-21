@@ -1,6 +1,6 @@
 package segmenttree;
 
-class LazyIntegerMaximumOperation implements LazySegmentTreeOperation<Integer> {
+class LazyIntegerSumOperation implements LazySegmentTreeOperation<Integer> {
 
     @Override
     public Integer aggregate(Integer left, Integer right) {
@@ -10,7 +10,7 @@ class LazyIntegerMaximumOperation implements LazySegmentTreeOperation<Integer> {
         if (left == null) {
             return right;
         }
-        return Math.max(left, right);
+        return left + right;
     }
 
     @Override
@@ -20,12 +20,12 @@ class LazyIntegerMaximumOperation implements LazySegmentTreeOperation<Integer> {
 
     @Override
     public Integer transform(Integer current, Integer value, int size) {
-        return current + value;
+        return current + value * size;
     }
 
     @Override
     public Integer nil() {
-        return Integer.MIN_VALUE;
+        return 0;
     }
 
     @Override

@@ -8,9 +8,9 @@ public interface SegmentTreeOperation<T> {
     T aggregate(T left, T right);
 
     /**
-     * Update element with value <code>current</code> to <code>update</code>.
+     * Transforms the element with value of <code>current</code> applying a new value of <code>value</code>.
      */
-    T update(T current, T update);
+    T transform(T current, T value);
     
     /**
      * Operation's null element.

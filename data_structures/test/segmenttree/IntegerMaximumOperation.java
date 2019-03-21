@@ -14,8 +14,8 @@ class IntegerMaximumOperation implements SegmentTreeOperation<Integer> {
     }
 
     @Override
-    public Integer update(Integer current, Integer update) {
-        return current + update;
+    public Integer transform(Integer current, Integer value) {
+        return current + value;
     }
 
     @Override

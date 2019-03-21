@@ -53,7 +53,7 @@ public class SegmentTree<T> {
 
     private void _increment(SegmentTreeNode<T> node, int index, T value) {
         if (node.getLow() == node.getHigh()) {
-            node.setValue(operation.update(node.getValue(), value));
+            node.setValue(operation.transform(node.getValue(), value));
         }
         else {
             SegmentTreeNode<T> next = index << 1 <= node.getLow() + node.getHigh()

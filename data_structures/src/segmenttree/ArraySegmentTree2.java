@@ -75,7 +75,7 @@ public class ArraySegmentTree2<T> {
 
     private void _increment(int index, T value) {
         int key = size + index;
-        tree[key] = operation.update(tree[key], value);
+        tree[key] = operation.transform(tree[key], value);
         do {
             key >>= 1;
             tree[key] = operation.aggregate(tree[key << 1], tree[(key << 1) + 1]);
