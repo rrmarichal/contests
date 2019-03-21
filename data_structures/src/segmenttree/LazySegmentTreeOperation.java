@@ -1,6 +1,6 @@
 package segmenttree;
 
-public interface SegmentTreeOperation<T> {
+public interface LazySegmentTreeOperation<T> {
     
     /**
      * Aggregate <code>left</code> and <code>right</code> elements.
@@ -16,5 +16,10 @@ public interface SegmentTreeOperation<T> {
      * Operation's null element.
      */
     T nil();
+    
+    /**
+     * Lazy's null element.
+     */
+    T zero();
     
 }

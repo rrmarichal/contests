@@ -59,7 +59,7 @@ public class RangeMaximumArraySegmentTree2Tests {
     }
 
     @Test
-    public void KOTest0() {
+    public void customArrayTest() {
         values = new Integer[] { 9, 5, 8, 4  };
         tree = ArraySegmentTree2.create(values, operation);
         assertEquals(8, (int) tree.value(1, 3));

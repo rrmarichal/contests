@@ -45,9 +45,7 @@ public class ArraySegmentTree2<T> {
                 : operation.nil();
         }
         else {
-            int mid = (low + high) >> 1,
-                left = index << 1,
-                right = (index << 1) + 1;
+            int mid = (low + high) >> 1, left = index << 1, right = left + 1;
             _buildTree(low, mid, left);
             _buildTree(mid + 1, high, right);
             tree[index] = operation.aggregate(tree[left], tree[right]);
@@ -58,31 +56,31 @@ public class ArraySegmentTree2<T> {
         // Go up in the tree until finding their common parent P.
         // Include the right children of nodes in the path from 'low' to P and
         // the left children on the path from 'high' to P.
-        int keyLow = size + low, keyHigh = size + high;
-        T result = operation.aggregate(tree[keyLow], tree[keyHigh]);
-        for (; keyLow >> 1 != keyHigh >> 1; keyLow >>= 1, keyHigh >>= 1) {
-            int lowParentKey = keyLow >> 1;
-            int highParentKey = keyHigh >> 1;
-            // Count parent's right child if 'keyLow' is its left child.
-            if (lowParentKey << 1 == keyLow) {
-                result = operation.aggregate(result, tree[(lowParentKey << 1) + 1]);
+        int lowKey = size + low, highKey = size + high;
+        T best = operation.aggregate(tree[lowKey], tree[highKey]);
+        for (; lowKey >> 1 != highKey >> 1; lowKey >>= 1, highKey >>= 1) {
+            int lowParentKey = lowKey >> 1;
+            // Count parent's right child if 'lowKey' is its left child.
+            if (lowParentKey << 1 == lowKey) {
+                best = operation.aggregate(best, tree[(lowParentKey << 1) + 1]);
             }
-            // Count parent's left child if 'keyHigh' is its right child.
-            if ((highParentKey << 1) + 1 == keyHigh) {
-                result = operation.aggregate(result, tree[highParentKey << 1]);
+            int highParentKey = highKey >> 1;
+            // Count parent's left child if 'highKey' is its right child.
+            if ((highParentKey << 1) + 1 == highKey) {
+                best = operation.aggregate(best, tree[highParentKey << 1]);
             }
         }
-        return result;
+        return best;
     }
 
     private void _increment(int index, T value) {
         int key = size + index;
         tree[key] = operation.update(tree[key], value);
         do {
-            key = key >> 1;
-            tree[key] = operation.aggregate(tree[key<<1], tree[(key<<1) + 1]);
+            key >>= 1;
+            tree[key] = operation.aggregate(tree[key << 1], tree[(key << 1) + 1]);
         }
-        while (key > 0);
+        while (key > 1);
     }
     
     /**
