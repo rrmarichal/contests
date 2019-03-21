@@ -34,20 +34,20 @@ class InputReader {
 
 }
 
-public class Solution<T> {
+public class Solution {
 
     protected Solution(InputReader in) {
         // TODO: Input
     }
 
-    public T solve() {
-        return null;
+    public int solve() {
+        return 0;
     }
 
     public static void main(String[] args) {
         InputReader in = new InputReader(System.in);
         PrintWriter out = new PrintWriter(System.out);
-        Solution<Integer> solution = new Solution<Integer>(in);
+        Solution solution = new Solution(in);
         out.println(solution.solve());
         out.close();
     }

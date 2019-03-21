@@ -8,10 +8,10 @@ public class SolutionTests {
 
     @Test
     public void test0() throws FileNotFoundException {
-        InputReader in = new InputReader(new FileInputStream("test_data/test.in"));
-        Solution<Integer> solution = new Solution<Integer>(in);
-        Integer result = solution.solve();
-        assertEquals(null, result);
+        InputReader in = new InputReader(new FileInputStream("test_data/0.in"));
+        Solution solution = new Solution(in);
+        int result = solution.solve();
+        assertEquals(0, result);
     }
 
 }
