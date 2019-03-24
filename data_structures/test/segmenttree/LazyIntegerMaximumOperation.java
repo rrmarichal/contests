@@ -14,12 +14,12 @@ class LazyIntegerMaximumOperation implements LazySegmentTreeOperation<Integer> {
     }
 
     @Override
-    public Integer transform(Integer current, Integer value) {
+    public Integer transformLazy(Integer current, Integer value) {
         return current + value;
     }
 
     @Override
-    public Integer transform(Integer current, Integer value, int size) {
+    public Integer transformTree(Integer current, Integer value, int size) {
         return current + value;
     }
 

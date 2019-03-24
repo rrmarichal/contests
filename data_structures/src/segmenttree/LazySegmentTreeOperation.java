@@ -12,7 +12,7 @@ public interface LazySegmentTreeOperation<T> {
      * @param current original value.
      * @param value value to apply for the transformation.
      */
-    T transform(T current, T value);
+    T transformLazy(T current, T value);
 
     /**
      * Transforms the element with value of <code>current</code> applying a new value of <code>value</code>.
@@ -20,7 +20,7 @@ public interface LazySegmentTreeOperation<T> {
      * @param value value to apply for the transformation.
      * @param size size of the subtree where the transforamtion is being applied.
      */
-    T transform(T current, T value, int size);
+    T transformTree(T current, T value, int size);
     
     /**
      * Operation's null element.

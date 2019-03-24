@@ -1,6 +1,13 @@
 package segmenttree;
 
-class LazyIntegerSumOperation implements LazySegmentTreeOperation<Integer> {
+/**
+ * Initialy all elements in a list are present. Subsequent updates remove elements
+ * from the list. Query how many elements remain after each operation.
+ * 
+ * Increments by -1 simulate the elimination in a specific range and queries return
+ * how many are still present.
+ */
+class LazyOneZeroSumOperation implements LazySegmentTreeOperation<Integer> {
 
     @Override
     public Integer aggregate(Integer left, Integer right) {
@@ -15,12 +22,16 @@ class LazyIntegerSumOperation implements LazySegmentTreeOperation<Integer> {
 
     @Override
     public Integer transformLazy(Integer current, Integer value) {
-        return current + value;
+        return current < 0
+            ? current
+            : current + value;
     }
 
     @Override
     public Integer transformTree(Integer current, Integer value, int size) {
-        return current + value * size;
+        return value < 0
+            ? 0
+            : current + value * size;
     }
 
     @Override

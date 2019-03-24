@@ -63,7 +63,7 @@ public class LazySegmentTree<T> {
      * Aggregate actual and lazy information from node at <code>index</code>.
      */
     private T _value(int index) {
-        return operation.transform(tree[index], lazy[index], subtreeSize[index]);
+        return operation.transformTree(tree[index], lazy[index], subtreeSize[index]);
     }
 
     private T _value(int low, int high) {
@@ -82,20 +82,20 @@ public class LazySegmentTree<T> {
                 lowBest = operation.aggregate(lowBest, _value((lowParentKey << 1) + 1));
                 leftSize += subtreeSize[(lowParentKey << 1) + 1];
             }
-            lowBest = operation.transform(lowBest, lazy[lowParentKey], leftSize);
+            lowBest = operation.transformTree(lowBest, lazy[lowParentKey], leftSize);
             int highParentKey = highKey >> 1;
             // Count parent's left child if 'highKey' is its right child.
             if ((highParentKey << 1) + 1 == highKey) {
                 highBest = operation.aggregate(highBest, _value(highParentKey << 1));
                 rightSize += subtreeSize[highParentKey << 1];
             }
-            highBest = operation.transform(highBest, lazy[highParentKey], rightSize);
+            highBest = operation.transformTree(highBest, lazy[highParentKey], rightSize);
         }
         T best = operation.aggregate(lowBest, highBest);
         // Aggregate the lazy values in the path up to the root.
         do {
             lowKey >>= 1;
-            best = operation.transform(best, lazy[lowKey], high - low + 1);
+            best = operation.transformTree(best, lazy[lowKey], high - low + 1);
         }
         while (lowKey > 1);
         return best;
@@ -103,18 +103,18 @@ public class LazySegmentTree<T> {
 
     private void _increment(int low, int high, T value) {
         // Go up on 'low' & 'high' up to their LCA P. Update each node on
-        // the way to P. Update lazyness information for low's parent's right
+        // the way up to P. Update lazyness information for low's parent's right
         // children and high's parent's left children.
         int lowKey = size + low, highKey = size + high;
-        tree[lowKey] = operation.transform(tree[lowKey], value);
+        tree[lowKey] = operation.transformTree(tree[lowKey], value, 1);
         if (lowKey != highKey) {
-            tree[highKey] = operation.transform(tree[highKey], value);
+            tree[highKey] = operation.transformTree(tree[highKey], value, 1);
         }
         while (lowKey >> 1 != highKey >> 1) {
             int lowParentKey = lowKey >> 1;
             // Lazyly update parent's right child if 'lowKey' is its left child.
             if (lowParentKey << 1 == lowKey) {
-                lazy[(lowParentKey << 1) + 1] = operation.transform(lazy[(lowParentKey << 1) + 1], value);
+                lazy[(lowParentKey << 1) + 1] = operation.transformLazy(lazy[(lowParentKey << 1) + 1], value);
             }
             tree[lowParentKey] = operation.aggregate(
                 _value(lowParentKey << 1), _value((lowParentKey << 1) + 1));
@@ -122,7 +122,7 @@ public class LazySegmentTree<T> {
             int highParentKey = highKey >> 1;
             // Lazyly update parent's left child if 'highKey' is its left child.
             if ((highParentKey << 1) + 1 == highKey) {
-                lazy[(highParentKey << 1)] = operation.transform(lazy[(highParentKey << 1)], value);
+                lazy[(highParentKey << 1)] = operation.transformLazy(lazy[(highParentKey << 1)], value);
             }
             tree[highParentKey] = operation.aggregate(
                 _value(highParentKey << 1), _value((highParentKey << 1) + 1));
