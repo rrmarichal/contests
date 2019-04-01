@@ -42,7 +42,7 @@ public class LazySegmentTree<T> {
     private void _buildTree(int low, int high, int index) {
         if (low == high) {
             // Handle the normalization operation.
-            // Items from [values.length to tree.length) are dummy.
+            // Items from [values.length .. tree.length) are dummy.
             tree[index] = low < values.length
                 ? values[low]
                 : operation.nil();

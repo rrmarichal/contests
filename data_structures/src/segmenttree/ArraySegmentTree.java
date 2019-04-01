@@ -23,8 +23,8 @@ public class ArraySegmentTree<T> {
     private ArraySegmentTree(T[] values, SegmentTreeOperation<T> operation) {
         this.operation = operation;
         size = values.length;
-        tree = (T[]) Array.newInstance(values.getClass().getComponentType(),
-            2*nextPowerOfTwo(values.length - 1) - 1);
+        int np2 = nextPowerOfTwo(values.length - 1);
+        tree = (T[]) Array.newInstance(values.getClass().getComponentType(), (np2 << 1) - 1);
         _buildTree(values, tree, 0, values.length - 1, 0);
     }
 
