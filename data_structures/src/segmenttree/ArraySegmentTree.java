@@ -25,22 +25,22 @@ public class ArraySegmentTree<T> {
         size = values.length;
         int np2 = nextPowerOfTwo(values.length - 1);
         tree = (T[]) Array.newInstance(values.getClass().getComponentType(), (np2 << 1) - 1);
-        _buildTree(values, tree, 0, values.length - 1, 0);
+        _buildTree(values, 0, values.length - 1, 0);
     }
 
     protected int nextPowerOfTwo(int value) {
         return 1 << (Integer.SIZE - Integer.numberOfLeadingZeros(value));
     }
 
-    private void _buildTree(T[] values, T[] tree, int low, int high, int index) {
+    private void _buildTree(T[] values, int low, int high, int key) {
         if (low == high) {
-            tree[index] = values[low];
+            tree[key] = values[low];
         }
         else {
-            int mid = (low + high) / 2;
-            _buildTree(values, tree, low, mid, 2*index + 1);
-            _buildTree(values, tree, mid + 1, high, 2*(index + 1));
-            tree[index] = operation.aggregate(tree[2*index + 1], tree[2*(index + 1)]);
+            int mid = (low + high) >> 1;
+            _buildTree(values, low, mid, (key << 1) + 1);
+            _buildTree(values, mid + 1, high, (key + 1) << 1);
+            tree[key] = operation.aggregate(tree[(key << 1) + 1], tree[(key + 1) << 1]);
         }
     }
 
@@ -54,9 +54,9 @@ public class ArraySegmentTree<T> {
             return tree[key];
         }
         // Partial overlap.
-        int mid = (nodeLow + nodeHigh)/2;
-        T lv = _value(low, high, 2*key + 1, nodeLow, mid);
-        T rv = _value(low, high, 2*(key + 1), mid + 1, nodeHigh);
+        int mid = (nodeLow + nodeHigh) >> 1;
+        T lv = _value(low, high, (key << 1) + 1, nodeLow, mid);
+        T rv = _value(low, high, (key + 1) << 1, mid + 1, nodeHigh);
         return operation.aggregate(lv, rv);
     }
 
@@ -65,14 +65,14 @@ public class ArraySegmentTree<T> {
             tree[key] = operation.transform(tree[key], value);
         }
         else {
-            int mid = (low + high)/2;
+            int mid = (low + high) >> 1;
             if (index <= mid) {
-                _increment(low, mid, 2*key + 1, index, value);
+                _increment(low, mid, (key << 1) + 1, index, value);
             }
             else {
-                _increment(mid + 1, high, 2*(key + 1), index, value);
+                _increment(mid + 1, high, (key + 1) << 1, index, value);
             }
-            tree[key] = operation.aggregate(tree[2*key + 1], tree[2*(key + 1)]);
+            tree[key] = operation.aggregate(tree[(key << 1) + 1], tree[(key + 1) << 1]);
         }
     }
 

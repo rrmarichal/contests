@@ -165,12 +165,12 @@ public class IndexedPriorityQueue<T> {
         }
     }
 
-    private void _checkUpdate(int index, T value) {
-        if (CHECKED && index < 0) {
-            throw new IllegalArgumentException("Invalid argument (index is negative).");
+    private void _checkUpdate(int key, T value) {
+        if (CHECKED && key < 0) {
+            throw new IllegalArgumentException("Invalid argument (key is negative).");
         }
-        if (CHECKED && index >= size) {
-            throw new IllegalArgumentException("Invalid argument (index out of bound).");
+        if (CHECKED && key >= size) {
+            throw new IllegalArgumentException("Invalid argument (key out of bound).");
         }
         if (CHECKED && value == null) {
             throw new IllegalArgumentException("Invalid argument (value is null).");
@@ -216,9 +216,9 @@ public class IndexedPriorityQueue<T> {
     /**
      * Update element at {@code index} with a specific value.
      */
-    public void update(int index, T value) {
-        _checkUpdate(index, value);
-        _update(index, value);
+    public void update(int key, T value) {
+        _checkUpdate(key, value);
+        _update(key, value);
     }
 
     /**
