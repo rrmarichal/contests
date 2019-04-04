@@ -1,4 +1,4 @@
-package priority_queue;
+package priorityqueue;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package priority_queue;
+package priorityqueue;
 
 public class QueueIntegerOperation implements PriorityQueueOperation<Integer> {
 
