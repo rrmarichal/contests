@@ -8,5 +8,5 @@
 **/.vscode/
 *.in
 *.out
-trash/
+.labs/
 archive/
