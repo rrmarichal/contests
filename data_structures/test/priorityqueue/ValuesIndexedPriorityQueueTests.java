@@ -109,7 +109,6 @@ public class ValuesIndexedPriorityQueueTests {
             QueueItem<Integer> qmin = queue.peek();
             int sminIndex = findMinIndex(source);
             assertEquals(source[sminIndex], qmin.value);
-            assertEquals(sminIndex, (int) qmin.key);
         }
     }
 
