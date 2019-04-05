@@ -47,7 +47,7 @@ public class SegmentTree<T> {
         if (low == high) {
             return new SegmentTreeNode<T>(low, high, values[low]);
         }
-        int mid = (low + high) / 2;
+        int mid = (low + high) >> 1;
         SegmentTreeNode<T> left = buildTree(values, low, mid);
         SegmentTreeNode<T> right = buildTree(values, mid + 1, high);
         return new SegmentTreeNode<T>(
