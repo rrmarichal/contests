@@ -1,5 +1,23 @@
 package segmenttree;
 
+class SegmentTreeNode<T> {
+    T value;
+    SegmentTreeNode<T> left, right;
+    int low, high;
+
+    public SegmentTreeNode(int low, int high, T value) {
+        this.low = low;
+        this.high = high;
+        this.value = value;
+    }
+
+    public SegmentTreeNode(int low, int high, T value, SegmentTreeNode<T> left, SegmentTreeNode<T> right) {
+        this(low, high, value);
+        this.left = left;
+        this.right = right;
+    }
+}
+
 public class SegmentTree<T> {
 
     private static final boolean CHECKED = true;
@@ -33,35 +51,34 @@ public class SegmentTree<T> {
         SegmentTreeNode<T> left = buildTree(values, low, mid);
         SegmentTreeNode<T> right = buildTree(values, mid + 1, high);
         return new SegmentTreeNode<T>(
-            low, high, operation.aggregate(left.getValue(), right.getValue()), left, right);
+            low, high, operation.aggregate(left.value, right.value), left, right);
     }
 
     private T _value(SegmentTreeNode<T> node, int low, int high) {
         // If no intersection, return default value.
-        if (low > node.getHigh() || high < node.getLow()) {
+        if (low > node.high || high < node.low) {
             return operation.nil();
         }
         // Check for full overlap.
-        if (node.getLow() >= low && node.getHigh() <= high) {
-            return node.getValue();
+        if (node.low >= low && node.high <= high) {
+            return node.value;
         }
         // Partial overlap.
-        T lv = _value(node.getLeft(), low, high);
-        T rv = _value(node.getRight(), low, high);
+        T lv = _value(node.left, low, high);
+        T rv = _value(node.right, low, high);
         return operation.aggregate(lv, rv);
     }
 
     private void _increment(SegmentTreeNode<T> node, int index, T value) {
-        if (node.getLow() == node.getHigh()) {
-            node.setValue(operation.transform(node.getValue(), value));
+        if (node.low == node.high) {
+            node.value = operation.transform(node.value, value);
         }
         else {
-            SegmentTreeNode<T> next = index << 1 <= node.getLow() + node.getHigh()
-                ? node.getLeft()
-                : node.getRight();
+            SegmentTreeNode<T> next = index << 1 <= node.low + node.high
+                ? node.left
+                : node.right;
             _increment(next, index, value);
-            node.setValue(
-                operation.aggregate(node.getLeft().getValue(), node.getRight().getValue()));
+            node.value = operation.aggregate(node.left.value, node.right.value);
         }
     }
 
