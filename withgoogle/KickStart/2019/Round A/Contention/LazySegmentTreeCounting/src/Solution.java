@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.*;
 
 class InputReader {
-
     private static final int BUFFER_SIZE = 1<<16;
 
     public BufferedReader reader;
@@ -31,7 +30,6 @@ class InputReader {
     public long nextLong() {
         return Long.parseLong(next());
     }
-
 }
 
 class QueueItem {
@@ -154,66 +152,275 @@ class IndexedPriorityQueue {
 
 }
 
-class TreeNode {
-    public int min, max;
+class IntervalTreeNode {
+    IntervalTree.Interval interval;
+    IntervalTreeNode left, right, parent;
+    int max;
 
-    public TreeNode(int min, int max) {
-        this.min = min;
-        this.max = max;
+    public IntervalTreeNode(IntervalTree.Interval interval) {
+        this.interval = interval;
+        max = interval.right;
+    }
+
+    public IntervalTreeNode(IntervalTree.Interval interval, IntervalTreeNode left, IntervalTreeNode right) {
+        this.interval = interval;        
+        this.left = left;
+        this.right = right;
+        max = interval.right;
+        if (left != null) {
+            left.parent = this;
+            max = Math.max(max, left.max);
+        }
+        if (right != null) {
+            right.parent = this;
+            max = Math.max(max, right.max);
+        }
+    }
+
+    public void adjustMax() {
+        int lmax = left != null ? left.max : Integer.MIN_VALUE;
+        int rmax = right != null ? right.max : Integer.MIN_VALUE;
+        max = Math.max(max, Math.max(lmax, rmax));
     }
 }
 
-class OrderedList {
-    
-    private boolean[] removed;
-    private SegmentInfo[] segments;
-
-    public static OrderedList create(SegmentInfo[] segments) {
-        return new OrderedList(segments);
+class LeftCoordinateIntervalComparator implements Comparator<IntervalTree.Interval> {
+    @Override
+    public int compare(IntervalTree.Interval x, IntervalTree.Interval y) {
+        return Integer.compare(x.left, y.left);
     }
+}
 
-    private OrderedList(SegmentInfo[] segments) {
-        this.segments = segments;
-        removed = new boolean[segments.length];
-    }
+/**
+ * Interval tree based on a BST implementation.
+ * 
+ * Supported operations include {@code insert}, {@code delete} and {@code intercept}.
+ * 
+ * BST is not guaranteed to be optimal after succesive add/remove operations.
+ */
+class IntervalTree {
 
-    public void remove(int key) {
-        removed[key] = true;
-    }
+    public static class Interval implements Comparable<Interval> {
+        int id, left, right;
 
-    public ArrayList<SegmentIntersection> intersect(int low, int high) {
-        ArrayList<SegmentIntersection> result = new ArrayList<SegmentIntersection>();
-        for (int j = 0; j < segments.length; j++) {
-            if (!removed[j] && !(segments[j].L > high || segments[j].R < low)) {
-                if (segments[j].L <= low && segments[j].R >= high) {
-                    result.add(new SegmentIntersection(j, high - low + 1));
-                }
-                else
-                if (segments[j].L >= low && segments[j].R <= high) {
-                    result.add(new SegmentIntersection(j, segments[j].R - segments[j].L + 1));
-                }
-                else
-                if (segments[j].L <= low) {
-                    result.add(new SegmentIntersection(j, segments[j].R - low + 1));
-                }
-                else {
-                    result.add(new SegmentIntersection(j, high - segments[j].L + 1));
-                }
-            }
+        public Interval(int id, int left, int right) {
+            this.id = id;
+            this.left = left;
+            this.right = right;
         }
-        return result;
+
+        @Override
+        public int compareTo(Interval o) {
+            return left != o.left
+                ? Integer.compare(left, o.left)
+                : Integer.compare(id, o.id);
+        }
     }
 
+    private HashMap<Integer, IntervalTreeNode> indices;
+    private IntervalTreeNode root;
+    private int size;
+
+    public static IntervalTree create(final Interval[] intervals) {
+        return new IntervalTree(intervals);
+    }
+
+    private IntervalTreeNode _buildTree(final Interval[] intervals, int low, int high) {
+        if (low > high) {
+            return null;
+        }
+        if (low == high) {
+            indices.put(intervals[low].id, new IntervalTreeNode(intervals[low]));
+            return indices.get(intervals[low].id);
+        }
+        int mid = (low + high) >> 1;
+        IntervalTreeNode left = _buildTree(intervals, low, mid - 1);
+        IntervalTreeNode right = _buildTree(intervals, mid + 1, high);
+        indices.put(intervals[mid].id, new IntervalTreeNode(intervals[mid], left, right));
+        return indices.get(intervals[mid].id);
+    }
+
+    private void _buildTree(final Interval[] intervals) {
+        Interval[] sorted = Arrays.copyOf(intervals, intervals.length);
+        Arrays.sort(sorted, new LeftCoordinateIntervalComparator());
+        root = _buildTree(sorted, 0, sorted.length - 1);
+        size = intervals.length;
+    }
+
+    private IntervalTree(final Interval[] intervals) {
+        indices = new HashMap<Integer, IntervalTreeNode>();
+        _buildTree(intervals);
+    }
+
+    private IntervalTreeNode _min(IntervalTreeNode x) {
+        IntervalTreeNode y = null;
+        while (x != null) {
+            y = x;
+            x = x.left;
+        }
+        if (y == null) {
+            return null;
+        }
+        return y;
+    }
+
+    public Interval min() {
+        IntervalTreeNode min = _min(root);
+        return min != null ? min.interval : null;
+    }
+
+    private IntervalTreeNode _max(IntervalTreeNode x) {
+        IntervalTreeNode y = null;
+        while (x != null) {
+            y = x;
+            x = x.right;
+        }
+        if (y == null) {
+            return null;
+        }
+        return y;
+    }
+
+    public Interval max() {
+        IntervalTreeNode max = _max(root);
+        return max != null ? max.interval : null;
+    }
+
+    private IntervalTreeNode _add(Interval interval) {
+        IntervalTreeNode x = root;
+        IntervalTreeNode y = null;
+        IntervalTreeNode z = new IntervalTreeNode(interval);
+        while (x != null) {
+            y = x;
+            x.max = Math.max(x.max, z.interval.right);
+            x = z.interval.compareTo(x.interval) < 0
+                ? x.left
+                : x.right;
+        }
+        z.parent = y;
+        if (y == null) {
+            root = z;
+        }
+        else
+        if (z.interval.compareTo(y.interval) < 0) {
+            y.left = z;
+        }
+        else {
+            y.right = z;
+        }
+        return z;
+    }
+
+    public void add(Interval interval) {
+        IntervalTreeNode node = _add(interval);
+        indices.put(interval.id, node);
+        size++;
+    }
+
+    private void _transplant(IntervalTreeNode u, IntervalTreeNode v) {
+        if (u.parent == null) {
+            root = v;
+        }
+        else
+        if (u == u.parent.left) {
+            u.parent.left = v;
+        }
+        else {
+            u.parent.right = v;
+        }
+        if (v != null) {
+            v.parent = u.parent;
+        }
+    }
+
+    private void _remove(int id) {
+        IntervalTreeNode z = indices.get(id);
+        if (z.left == null) {
+            _transplant(z, z.right);
+        }
+        else
+        if (z.right == null) {
+            _transplant(z, z.left);
+        }
+        else {
+            // Find z's successor.
+            IntervalTreeNode y = _min(z.right);
+            if (y.parent != z) {
+                _transplant(y, y.right);
+                y.right = z.right;
+                y.right.parent = y;
+                y.right.adjustMax();
+            }
+            _transplant(z, y);
+            y.left = z.left;
+            y.left.parent = y;
+            y.adjustMax();
+        }
+        // Walk up to the root updating max values.
+        while (z.parent != null) {
+            z = z.parent;
+            z.adjustMax();
+        }
+    }
+
+    /**
+     * Removes the interval with a specific ID.
+     */
+	public void remove(int id) {
+        _remove(id);
+        indices.remove(id);
+        size--;
+    }
+    
+    private boolean _intercept(Interval interval, int left, int right) {
+        return !(left > interval.right || right < interval.left);
+    }
+
+    private void _intersection(int left, int right, IntervalTreeNode current, ArrayList<Interval> intervals) {
+        if (_intercept(current.interval, left, right)) {
+            intervals.add(current.interval);
+        }
+        if (current.left != null && current.left.max >= left) {
+            _intersection(left, right, current.left, intervals);
+        }
+        if (current.right != null && current.interval.left <= right) {
+            _intersection(left, right, current.right, intervals);
+        }
+    }
+
+    /**
+     * Returns the list of intervals that intercept the argument interval defined
+     * by [{@code left..right}].
+     */
+	public Collection<Interval> intersection(int left, int right) {
+        ArrayList<Interval> intervals = new ArrayList<Interval>();
+        _intersection(left, right, root, intervals);
+        return intervals;
+	}
+
+    public int size() {
+        return size;
+    }
+
+}
+
+class MinMaxSegmentTreeNode {
+    public int min, max;
+
+    public MinMaxSegmentTreeNode(int min, int max) {
+        this.min = min;
+        this.max = max;
+    }
 }
 
 class MinMaxSegmentTree {
 
     private int N, size;
     private SegmentInfo[] S;
-    private TreeNode[] tree;
+    private MinMaxSegmentTreeNode[] tree;
     private int[] lazy;
     private IndexedPriorityQueue segmentsQueue;
-    private OrderedList segmentsList;
+    private IntervalTree segmentsList;
 
 	public static MinMaxSegmentTree create(int N, SegmentInfo[] S) {
 		return new MinMaxSegmentTree(N, S);
@@ -223,21 +430,42 @@ class MinMaxSegmentTree {
         this.S = S;
         this.N = N;
         this.size = nextPowerOfTwo(N - 1);
+
+        long start = System.currentTimeMillis();
+
         _buildTree();
+
+        System.out.println(String.format("Completed MinMaxSegmentTree creation: %d", System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+
         segmentsQueue = IndexedPriorityQueue.create(S.length + 1);
-        segmentsList = OrderedList.create(S);
+
+        System.out.println(String.format("Completed IndexedPriorityQueue creation: %d", System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+
+        IntervalTree.Interval[] intervals = new IntervalTree.Interval[S.length];
+        for (int j = 0; j < S.length; j++) {
+            intervals[j] = new IntervalTree.Interval(j, S[j].L, S[j].R);
+        }
+        segmentsList = IntervalTree.create(intervals);
+
+        System.out.println(String.format("Completed IntervalTree creation: %d", System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+
         for (int j = 0; j < S.length; j++) {
             _update(S[j].L, S[j].R, 0, 0, size - 1, 1);
         }
         _update(0, N - 1, 0, 0, size - 1, 1);
         segmentsQueue.update(S.length, 1);
+
+        System.out.println(String.format("Completed intervals insertion: %d", System.currentTimeMillis() - start));
     }
 
     private void _buildTree() {
-        tree = new TreeNode[(size << 1) - 1];
+        tree = new MinMaxSegmentTreeNode[(size << 1) - 1];
         lazy = new int[(size << 1) - 1];
         for (int j = 0; j < (size << 1) - 1; j++) {
-            tree[j] = new TreeNode(0, 0);
+            tree[j] = new MinMaxSegmentTreeNode(0, 0);
         }
     }
 
@@ -256,11 +484,28 @@ class MinMaxSegmentTree {
         return lazy[key] + tree[key].max;
     }
 
+    private int _intersection(int sleft, int sright, int low, int high) {
+        if (sleft <= low && sright >= high) {
+            return high - low + 1;
+        }
+        else
+        if (sleft >= low && sright <= high) {
+            return sright - sleft + 1;
+        }
+        else
+        if (sleft <= low) {
+            return sright - low + 1;
+        }
+        else {
+            return high - sleft + 1;
+        }
+    }
+
     private void _push(int low, int high, int key, int klow, int khigh, int value, boolean counted) {
         if (_max(key) == 1 && !counted && value < 0) {
-            ArrayList<SegmentIntersection> segments = segmentsList.intersect(klow, khigh);
-            for (SegmentIntersection si: segments) {
-                segmentsQueue.update(si.id, si.intersection);
+            Collection<IntervalTree.Interval> segments = segmentsList.intersection(klow, khigh);
+            for (IntervalTree.Interval si: segments) {
+                segmentsQueue.update(si.id, _intersection(si.left, si.right, klow, khigh));
             }
             counted = true;
         }
@@ -375,7 +620,14 @@ public class Solution {
         for (int t = 0; t < T; t++) {
             int N = tests[t].N, Q = tests[t].Q;
             SegmentInfo[] S = tests[t].S;
+            
+            long tstart = System.currentTimeMillis();
+
             MinMaxSegmentTree minMax = MinMaxSegmentTree.create(N, S);
+
+            System.out.println(String.format("Completed tree creation for test %d: %d", t + 1, System.currentTimeMillis() - tstart));
+            long pstart = System.currentTimeMillis();
+
             int min = Integer.MAX_VALUE;
             for (int j = 0; j < Q + 1; j++) {
                 int max = minMax.poll();
@@ -383,6 +635,9 @@ public class Solution {
                     min = max;
                 }
             }
+            System.out.println(String.format("Completed test %d processing: %d", t + 1, System.currentTimeMillis() - pstart));
+            System.out.println(String.format("Completed test %d total: %d", t + 1, System.currentTimeMillis() - tstart));
+            
             result[t] = String.format("Case #%d: %d", t + 1, min);
         }
         return result;
@@ -392,7 +647,10 @@ public class Solution {
         InputReader in = new InputReader(System.in);
         PrintWriter out = new PrintWriter(System.out);
         Solution solution = new Solution(in);
-        out.println(solution.solve());
+        String[] result = solution.solve();
+        for (String c: result) {
+            out.println(c);
+        }
         out.close();
     }
 
