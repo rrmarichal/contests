@@ -1,8 +1,8 @@
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.*;
 
-import org.junit.*;
+import org.junit.jupiter.api.Test;
 
 public class SolutionTests {
 
