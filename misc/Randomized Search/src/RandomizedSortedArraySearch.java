@@ -1,19 +1,17 @@
-package contests.misc;
-
 import java.util.Random;
 
-public class RandomizedSortedArraySearch {
+class SearchResult {
 
-    class SearchResult {
+    public int index, iterations;
 
-        public int index, iterations;
-
-        public SearchResult(int index, int iterations) {
-            this.index = index;
-            this.iterations = iterations;
-        }
-
+    public SearchResult(int index, int iterations) {
+        this.index = index;
+        this.iterations = iterations;
     }
+
+}
+
+public class RandomizedSortedArraySearch {
 
     private static final boolean CHECKED = true;
 
