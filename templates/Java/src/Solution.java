@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.*;
 
 class InputReader {
-
     private static final int BUFFER_SIZE = 1<<16;
 
     public BufferedReader reader;
@@ -31,7 +30,6 @@ class InputReader {
     public long nextLong() {
         return Long.parseLong(next());
     }
-
 }
 
 public class Solution {
