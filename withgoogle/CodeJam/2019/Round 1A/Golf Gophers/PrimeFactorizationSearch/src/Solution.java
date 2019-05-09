@@ -32,12 +32,6 @@ class InputReader {
     }
 }
 
-class TestInfo {
-    public TestInfo() {
-
-    }
-}
-
 /**
  * Based on the Chinese Remainder Theorem, the set of linear modular equations:
  * 
