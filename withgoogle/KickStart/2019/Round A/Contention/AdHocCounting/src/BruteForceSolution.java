@@ -1,6 +1,3 @@
-import java.io.*;
-import java.util.*;
-
 public class BruteForceSolution {
 
     private int T, best;

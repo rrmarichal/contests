@@ -105,7 +105,7 @@ public class SolutionTests {
         PrintWriter pw = new PrintWriter(fileName);
         pw.println(T);
         for (; T > 0; T--) {
-            int Q = 1 + r.nextInt(Math.min(N / 10, 9));
+            int Q = 1 + r.nextInt(Math.min(N, 9));
             pw.println(String.format("%d %d", N, Q));
             for (int j = 0; j < Q; j++) {
                 int s = r.nextInt(N);

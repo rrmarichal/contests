@@ -413,59 +413,75 @@ class MinMaxSegmentTreeNode {
     }
 }
 
+class EndpointInfo implements Comparable<EndpointInfo> {
+    int offset, index, open;
+
+    public EndpointInfo(int offset, int index, int open) {
+        this.offset = offset;
+        this.index = index;
+        this.open = open;
+    }
+
+    @Override
+    public int compareTo(EndpointInfo o) {
+        return Integer.compare(offset, o.offset);
+    }
+}
+
 class MinMaxSegmentTree {
 
-    private int N, size;
+    private int N, Q, size;
     private SegmentInfo[] S;
     private MinMaxSegmentTreeNode[] tree;
     private int[] lazy;
     private IndexedPriorityQueue segmentsQueue;
     private IntervalTree segmentsList;
 
-	public static MinMaxSegmentTree create(int N, SegmentInfo[] S) {
-		return new MinMaxSegmentTree(N, S);
+	public static MinMaxSegmentTree create(int N, int Q, SegmentInfo[] S) {
+		return new MinMaxSegmentTree(N, Q, S);
     }
     
-    private MinMaxSegmentTree(int N, SegmentInfo[] S) {
-        this.S = S;
+    private MinMaxSegmentTree(int N, int Q, SegmentInfo[] S) {
         this.N = N;
+        this.Q = Q;
+        this.S = S;
         this.size = nextPowerOfTwo(N - 1);
-
-        long start = System.currentTimeMillis();
-
-        _buildTree();
-
-        System.out.println(String.format("Completed MinMaxSegmentTree creation: %d", System.currentTimeMillis() - start));
-        start = System.currentTimeMillis();
-
         segmentsQueue = IndexedPriorityQueue.create(S.length + 1);
-
-        System.out.println(String.format("Completed IndexedPriorityQueue creation: %d", System.currentTimeMillis() - start));
-        start = System.currentTimeMillis();
-
         IntervalTree.Interval[] intervals = new IntervalTree.Interval[S.length];
         for (int j = 0; j < S.length; j++) {
             intervals[j] = new IntervalTree.Interval(j, S[j].L, S[j].R);
         }
         segmentsList = IntervalTree.create(intervals);
-
-        System.out.println(String.format("Completed IntervalTree creation: %d", System.currentTimeMillis() - start));
-        start = System.currentTimeMillis();
-
-        for (int j = 0; j < S.length; j++) {
-            _update(S[j].L, S[j].R, 0, 0, size - 1, 1);
-        }
-        _update(0, N - 1, 0, 0, size - 1, 1);
+        _buildTree();
         segmentsQueue.update(S.length, 1);
-
-        System.out.println(String.format("Completed intervals insertion: %d", System.currentTimeMillis() - start));
     }
 
     private void _buildTree() {
         tree = new MinMaxSegmentTreeNode[(size << 1) - 1];
         lazy = new int[(size << 1) - 1];
-        for (int j = 0; j < (size << 1) - 1; j++) {
-            tree[j] = new MinMaxSegmentTreeNode(0, 0);
+        EndpointInfo[] endpoints = new EndpointInfo[(Q + 1) << 1];
+        for (int j = 0; j < Q; j++) {
+            endpoints[j << 1] = new EndpointInfo(S[j].L, j, 1);
+            endpoints[(j << 1) + 1] = new EndpointInfo(S[j].R + 1, j, -1);
+        }
+        endpoints[Q << 1] = new EndpointInfo(0, S.length, 1);
+        endpoints[(Q << 1) + 1] = new EndpointInfo(size, S.length, -1);
+        Arrays.sort(endpoints);
+        int open = 0, last = 0;
+        for (int j = 0; j < endpoints.length; j++) {
+            for (int k = last; k < endpoints[j].offset; k++) {
+                tree[size + k - 1] = new MinMaxSegmentTreeNode(open, open);
+            }
+            open += endpoints[j].open;
+            last = endpoints[j].offset;
+        }
+        // Build tree upon computed distances.
+        for (int j = size - 2; j >= 0; j--) {
+            int left = (j << 1) + 1, right = left + 1;
+            tree[j] = new MinMaxSegmentTreeNode(
+                Math.min(tree[left].min, tree[right].min),
+                Math.max(tree[left].max, tree[right].max)
+            );
         }
     }
 
@@ -501,8 +517,8 @@ class MinMaxSegmentTree {
         }
     }
 
-    private void _push(int low, int high, int key, int klow, int khigh, int value, boolean counted) {
-        if (_max(key) == 1 && !counted && value < 0) {
+    private void _push(int low, int high, int key, int klow, int khigh, boolean counted) {
+        if (_max(key) == 1 && !counted) {
             Collection<IntervalTree.Interval> segments = segmentsList.intersection(klow, khigh);
             for (IntervalTree.Interval si: segments) {
                 segmentsQueue.update(si.id, _intersection(si.left, si.right, klow, khigh));
@@ -511,8 +527,7 @@ class MinMaxSegmentTree {
         }
         if (key < size - 1) {
             int min = _min(key);
-            boolean push = min == 1 || (value < 0 && min == Integer.MAX_VALUE) || (value > 0 && min == 2);
-            if (push) {
+            if (min == 1 || min == Integer.MAX_VALUE) {
                 int lkey = (key << 1) + 1,
                     rkey = lkey + 1,
                     mid = (klow + khigh) >> 1;
@@ -521,8 +536,8 @@ class MinMaxSegmentTree {
                 lazy[rkey] += lazy[key];
                 lazy[key] = 0;
                 
-                _push(low, high, lkey, klow, mid, value, counted);
-                _push(low, high, rkey, mid + 1, khigh, value, counted);
+                _push(low, high, lkey, klow, mid, counted);
+                _push(low, high, rkey, mid + 1, khigh, counted);
 
                 tree[key].min = Math.min(_min(lkey), _min(rkey));
                 tree[key].max = Math.max(_max(lkey), _max(rkey));
@@ -530,13 +545,13 @@ class MinMaxSegmentTree {
         }
     }
 
-    private void _update(int low, int high, int key, int klow, int khigh, int value) {
+    private void _update(int low, int high, int key, int klow, int khigh) {
         if (low > khigh || high < klow) {
             return;
         }
         if (klow >= low && khigh <= high) {
-            lazy[key] += value;
-            _push(low, high, key, klow, khigh, value, false);
+            lazy[key]--;
+            _push(low, high, key, klow, khigh, false);
         }
         else {
             int lkey = (key << 1) + 1,
@@ -547,8 +562,8 @@ class MinMaxSegmentTree {
             lazy[rkey] += lazy[key];
             lazy[key] = 0;
 
-            _update(low, high, lkey, klow, mid, value);
-            _update(low, high, rkey, mid + 1, khigh, value);
+            _update(low, high, lkey, klow, mid);
+            _update(low, high, rkey, mid + 1, khigh);
 
             tree[key].min = Math.min(_min(lkey), _min(rkey));
             tree[key].max = Math.max(_max(lkey), _max(rkey));
@@ -558,11 +573,11 @@ class MinMaxSegmentTree {
     public int poll() {
         QueueItem max = segmentsQueue.poll();
         if (max.key == S.length) {
-            _update(0, N - 1, 0, 0, size - 1, -1);
+            _update(0, N - 1, 0, 0, size - 1);
             return Integer.MAX_VALUE;
         }
         segmentsList.remove(max.key);
-        _update(S[max.key].L, S[max.key].R, 0, 0, size - 1, -1);
+        _update(S[max.key].L, S[max.key].R, 0, 0, size - 1);
         return max.value;
     }
 
@@ -620,14 +635,7 @@ public class Solution {
         for (int t = 0; t < T; t++) {
             int N = tests[t].N, Q = tests[t].Q;
             SegmentInfo[] S = tests[t].S;
-            
-            long tstart = System.currentTimeMillis();
-
-            MinMaxSegmentTree minMax = MinMaxSegmentTree.create(N, S);
-
-            System.out.println(String.format("Completed tree creation for test %d: %d", t + 1, System.currentTimeMillis() - tstart));
-            long pstart = System.currentTimeMillis();
-
+            MinMaxSegmentTree minMax = MinMaxSegmentTree.create(N, Q, S);
             int min = Integer.MAX_VALUE;
             for (int j = 0; j < Q + 1; j++) {
                 int max = minMax.poll();
@@ -635,9 +643,6 @@ public class Solution {
                     min = max;
                 }
             }
-            System.out.println(String.format("Completed test %d processing: %d", t + 1, System.currentTimeMillis() - pstart));
-            System.out.println(String.format("Completed test %d total: %d", t + 1, System.currentTimeMillis() - tstart));
-            
             result[t] = String.format("Case #%d: %d", t + 1, min);
         }
         return result;
