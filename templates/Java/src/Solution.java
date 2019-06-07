@@ -11,18 +11,9 @@ class InputReader {
         reader = new BufferedReader(new InputStreamReader(stream), BUFFER_SIZE);
     }
 
-    private String readLine() {
-        try {
-            return reader.readLine();
-        }
-        catch (IOException e) {
-            return null;
-        }
-    }
-
     private boolean ensureTokenizer() {
         if (tokenizer == null || !tokenizer.hasMoreTokens()) {
-            String line = readLine();
+            String line = nextLine();
             if (line != null) {
                 tokenizer = new StringTokenizer(line);
             }
@@ -31,15 +22,13 @@ class InputReader {
     }
 
     public String nextLine() {
-        if (ensureTokenizer()) {
-            StringBuilder result = new StringBuilder();
-            while (tokenizer.hasMoreTokens()) {
-                result.append(tokenizer.nextToken());
-                result.append(' ');
-            }
-            return result.toString();
+        try {
+            tokenizer = null;
+            return reader.readLine();
         }
-        return null;
+        catch (IOException e) {
+            return null;
+        }
     }
 
     public String nextToken() {
