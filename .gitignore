@@ -10,3 +10,4 @@
 *.out
 .labs/
 archive/
+**/__pycache__/
