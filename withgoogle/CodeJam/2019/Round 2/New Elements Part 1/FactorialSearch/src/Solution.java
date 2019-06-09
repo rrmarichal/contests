@@ -128,9 +128,27 @@ public class Solution {
         return lb.compareTo(ub) < 0;
     }
 
+    @SuppressWarnings("unused")
+    private String _getPermutation(MoleculeInfo[] molecules, int[] permutation) {
+        MoleculeInfo curr = molecules[permutation[0]];
+        StringBuilder sb = new StringBuilder();
+        for (int j = 0; j < permutation.length - 1; j++) {
+            MoleculeInfo next = molecules[permutation[j + 1]];
+            sb.append(String.format("%d %d\n", curr.C, curr.J));
+            curr = next;
+        }
+        sb.append(String.format("%d %d\n", curr.C, curr.J));
+        return sb.toString();
+    }
+
     private int _valid(MoleculeInfo[] molecules, int index, int[] permutation, boolean[] used) {
         if (index == molecules.length) {
-            return _valid(molecules, permutation) ? 1 : 0;
+            if (_valid(molecules, permutation)) {
+                // out.println(_getPermutation(molecules, permutation));
+                // out.println();
+                return 1;
+            }
+            return 0;
         }
         int result = 0;
         for (int j = 0; j < molecules.length; j++) {
