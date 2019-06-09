@@ -11,3 +11,4 @@
 .labs/
 archive/
 **/__pycache__/
+**/.pytest_cache/
