@@ -1,4 +1,6 @@
-import java.io.*;
+package continuedfractions;
+
+import java.io.PrintWriter;
 
 public class Solution {
 
@@ -9,7 +11,7 @@ public class Solution {
      * The first line contains T, the number of fractions.
      * The second line contains a list of T fractions, each defined as two integers, N and D.
      */
-    protected Solution(InputReader in) {
+    public Solution(InputReader in) {
         T = in.nextInt();
         fractions = new Fraction[T];
         for (int t = 0; t < T; t++) {

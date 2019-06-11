@@ -1,7 +1,12 @@
-import java.io.*;
-import java.util.*;
+package continuedfractions;
 
-class InputReader {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class InputReader {
     private static final int BUFFER_SIZE = 1<<16;
 
     private BufferedReader reader;

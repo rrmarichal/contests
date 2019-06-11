@@ -44,9 +44,26 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
             <version>1.2.1</version>
-            <configuration>
-                <mainClass>Solution</mainClass>
-            </configuration>
+            <executions>
+                <execution>
+                    <id>main</id>
+                    <configuration>
+                        <mainClass>continuedfractions.Solution</mainClass>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>cf2f</id>
+                    <configuration>
+                        <mainClass>scripts.ContinuedFractionToFraction</mainClass>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>f2cf</id>
+                    <configuration>
+                        <mainClass>scripts.FractionToContinuedFraction</mainClass>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
