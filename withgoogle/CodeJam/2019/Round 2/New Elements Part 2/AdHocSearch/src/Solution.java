@@ -109,7 +109,7 @@ public class Solution {
     private int T;
     private TestInfo[] tests;
 
-	public Solution(InputReader in) {
+    public Solution(InputReader in) {
         T = in.nextInt();
         tests = new TestInfo[T];
         for (int t = 0; t < T; t++) {
@@ -120,9 +120,9 @@ public class Solution {
             }
             tests[t] = new TestInfo(N, molecules);
         }
-	}
+    }
 
-	private boolean _increasing(MoleculeInfo[] molecules, long c, long j) {
+    private boolean _increasing(MoleculeInfo[] molecules, long c, long j) {
         long curr = molecules[0].C * c + molecules[0].J * j;
         for (int k = 1; k < molecules.length; k++) {
             long next = molecules[k].C * c + molecules[k].J * j;
@@ -146,7 +146,7 @@ public class Solution {
     }
 
     public String[] solve() {
-		String[] result = new String[T];
+        String[] result = new String[T];
         for (int t = 0; t < T; t++) {
             Fraction b = _solve(tests[t]);
             if (b == null) {
@@ -157,7 +157,7 @@ public class Solution {
             }
         }
         return result;
-	}
+    }
 
     public static void main(String[] args) {
         InputReader in = new InputReader(System.in);
