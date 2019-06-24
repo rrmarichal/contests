@@ -11,20 +11,15 @@ public class FractionTests {
     @Test
     public void baseTest0() {
         Fraction f = new Fraction(0, 1);
-        assertEquals(0, f.getNumerator());
-        assertEquals(1, f.getDenominator());
+        assertEquals(0, f.getNumerator().longValue());
+        assertEquals(1, f.getDenominator().longValue());
     }
 
     @Test
     public void baseTest1() {
         Fraction f = new Fraction(0, 2);
-        assertEquals(0, f.getNumerator());
-        assertEquals(1, f.getDenominator());
-    }
-
-    @Test
-    public void baseTest2() {
-        assertThrows(IllegalArgumentException.class, () -> new Fraction(1, 0));
+        assertEquals(0, f.getNumerator().longValue());
+        assertEquals(1, f.getDenominator().longValue());
     }
 
     @Test
@@ -143,50 +138,64 @@ public class FractionTests {
     @Test
     public void multiplyTest0() {
         Fraction f = new Fraction(4, 9);
-        Fraction p = f.multiply(2);
+        Fraction p = f.multiply(2L);
         assertEquals(new Fraction(8, 9), p);
     }
 
     @Test
     public void multiplyTest1() {
         Fraction f = new Fraction(-3, 29);
-        Fraction p = f.multiply(11);
+        Fraction p = f.multiply(11L);
         assertEquals(new Fraction(-33, 29), p);
     }
 
     @Test
     public void multiplyTest2() {
         Fraction f = new Fraction(-3, 29);
-        Fraction p = f.multiply(-5);
+        Fraction p = f.multiply(-5L);
         assertEquals(new Fraction(15, 29), p);
     }
 
     @Test
     public void divideTest0() {
         Fraction f = new Fraction(4, 9);
-        Fraction p = f.divide(2);
+        Fraction p = f.divide(2L);
         assertEquals(new Fraction(4, 18), p);
     }
 
     @Test
     public void divideTest1() {
         Fraction f = new Fraction(-3, 29);
-        Fraction p = f.divide(11);
+        Fraction p = f.divide(11L);
         assertEquals(new Fraction(-3, 319), p);
     }
 
     @Test
     public void divideTest2() {
         Fraction f = new Fraction(1, 2);
-        Fraction p = f.divide(-100);
+        Fraction p = f.divide(-100L);
         assertEquals(new Fraction(-1, 200), p);
     }
 
     @Test
     public void fractionIsReducedTest() {
         Fraction f = new Fraction(3, 33);
-        assertEquals(1, f.getNumerator());
-        assertEquals(11, f.getDenominator());
+        assertEquals(1, f.getNumerator().longValue());
+        assertEquals(11, f.getDenominator().longValue());
+    }
+
+    @Test
+    public void reciprocalTest() {
+        Fraction f = new Fraction(3, 32).reciprocal();
+        assertEquals(32, f.getNumerator().longValue());
+        assertEquals(3, f.getDenominator().longValue());
+    }
+
+    @Test
+    public void reciprocalTesta() {
+        Fraction f = new Fraction(0, 1).reciprocal();
+        assertEquals(1, f.getNumerator().longValue());
+        assertEquals(0, f.getDenominator().longValue());
     }
 
 }

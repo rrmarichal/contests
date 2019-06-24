@@ -1,8 +1,25 @@
 package fractions;
 
+import java.math.BigInteger;
+
 public class Fraction implements Comparable<Fraction> {
 
-    private long n, d;
+    /**
+     * The Fraction constant zero.
+     */
+    public static final Fraction ZERO = new Fraction(0, 1);
+
+    /**
+     * The Fraction constant one.
+     */
+    public static final Fraction ONE = new Fraction(1, 1);
+
+    /**
+     * The Fraction constant infinity.
+     */
+    public static final Fraction INF = new Fraction(1, 0);
+
+    private BigInteger n, d;
     private int sign;
 
     public static Fraction min(Fraction a, Fraction b) {
@@ -20,31 +37,38 @@ public class Fraction implements Comparable<Fraction> {
     }
 
     public static Fraction median(Fraction a, Fraction b) {
-        return new Fraction(a.n + b.n, a.d + b.d);
+        return new Fraction(a.n.add(b.n), a.d.add(b.d));
+    }
+
+    public Fraction(BigInteger n, BigInteger d) {
+        this.sign = _sign(n, d);
+        BigInteger gcd = n.gcd(d);
+        this.n = n.abs().divide(gcd);
+        this.d = d.abs().divide(gcd);
     }
 
     public Fraction(long n, long d) {
-        if (d == 0) {
-            throw new IllegalArgumentException();
-        }
-        this.sign = (int) Math.signum(n * d);
-        long gcd = Math.abs(_gcd(n, d));
-        this.n = Math.abs(n) / gcd;
-        this.d = Math.abs(d) / gcd;
+        this(BigInteger.valueOf(n), BigInteger.valueOf(d));
     }
 
-    private long _gcd(long a, long b) {
-        if (b == 0) {
-            return a;
+    private int _sign(BigInteger n, BigInteger d) {
+        if (BigInteger.ZERO.equals(n)) {
+            return 0;
         }
-        return _gcd(b, a % b);
+        if (BigInteger.ZERO.equals(d)) {
+            return n.signum();
+        }
+        if (n.signum() == d.signum()) {
+            return 1;
+        }
+        return -1;
     }
  
-    public long getNumerator() {
-        return n * sign;
+    public BigInteger getNumerator() {
+        return n.multiply(BigInteger.valueOf(sign));
     }
 
-    public long getDenominator() {
+    public BigInteger getDenominator() {
         return d;
     }
 
@@ -52,21 +76,33 @@ public class Fraction implements Comparable<Fraction> {
         if (other == null) {
             throw new IllegalArgumentException();
         }
-        long dd = d * other.d;
-        long nn = other.d * getNumerator() + d * other.getNumerator();
+        BigInteger dd = d.multiply(other.d);
+        BigInteger nn = other.d.multiply(getNumerator()).add(d.multiply(other.getNumerator()));
         return new Fraction(nn, dd);
     }
 
-    public Fraction add(long x) {
-        return add(new Fraction(x, 1));
+    public Fraction add(Long x) {
+        return add(new Fraction(x, 1L));
     }
 
-    public Fraction divide(long q) {
-        return new Fraction(getNumerator(), getDenominator() * q);
+    public Fraction add(BigInteger x) {
+        return add(new Fraction(x, BigInteger.ONE));
     }
 
-    public Fraction multiply(long x) {
-        return new Fraction(getNumerator() * x, getDenominator());
+    public Fraction divide(Long q) {
+        return new Fraction(getNumerator(), getDenominator().multiply(BigInteger.valueOf(q)));
+    }
+
+    public Fraction divide(BigInteger q) {
+        return new Fraction(getNumerator(), getDenominator().multiply(q));
+    }
+
+    public Fraction multiply(Long x) {
+        return new Fraction(getNumerator().multiply(BigInteger.valueOf(x)), getDenominator());
+    }
+
+    public Fraction multiply(BigInteger x) {
+        return new Fraction(getNumerator().multiply(x), getDenominator());
     }
 
     public Fraction reciprocal() {
@@ -92,15 +128,14 @@ public class Fraction implements Comparable<Fraction> {
         if (sign != other.sign) {
             return Integer.compare(sign, other.sign);
         }
-        long cp1 = other.d * n;
-        long cp2 = other.n * d;
-        return sign * Long.compare(cp1, cp2);
+        BigInteger cp1 = other.d.multiply(n);
+        BigInteger cp2 = other.n.multiply(d);
+        return sign * cp1.compareTo(cp2);
     }
 
     @Override
     public String toString() {
-        return String.format("%d/%d", getNumerator(), getDenominator());
+        return String.format("%s/%s", getNumerator().toString(), getDenominator().toString());
     }
 
 }
-
