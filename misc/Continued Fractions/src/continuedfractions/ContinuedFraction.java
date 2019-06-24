@@ -1,15 +1,14 @@
 package continuedfractions;
 
 import java.util.List;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import fractions.Fraction;
 
 public class ContinuedFraction implements Comparable<ContinuedFraction> {
 
-    private static final Fraction zero = new Fraction(0, 1);
-
-    private List<Long> terms;
+    private List<BigInteger> terms;
     private Fraction fraction;
 
     public static ContinuedFraction fromFraction(Fraction fraction) {
@@ -19,11 +18,22 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
         return new ContinuedFraction(fraction);
     }
 
-    public static ContinuedFraction fromTerms(List<Long> terms) {
+    public static ContinuedFraction fromBigIntegerTerms(List<BigInteger> terms) {
         if (terms == null || terms.size() == 0) {
             throw new IllegalArgumentException();
         }
         return new ContinuedFraction(terms);
+    }
+
+    public static ContinuedFraction fromLongTerms(List<Long> terms) {
+        if (terms == null || terms.size() == 0) {
+            throw new IllegalArgumentException();
+        }
+        List<BigInteger> bterms = new ArrayList<BigInteger>();
+        for (Long term: terms) {
+            bterms.add(BigInteger.valueOf(term));
+        }
+        return new ContinuedFraction(bterms);
     }
 
     protected ContinuedFraction(Fraction fraction) {
@@ -31,7 +41,7 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
         this.terms = _eval(fraction);
     }
 
-    protected ContinuedFraction(List<Long> terms) {
+    protected ContinuedFraction(List<BigInteger> terms) {
         this.terms = terms;
         this.fraction = _eval(terms, 0).reciprocal();
     }
@@ -40,8 +50,8 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
         return fraction;
     }
 
-    public List<Long> getTerms() {
-        return new ArrayList<Long>(terms);
+    public List<BigInteger> getTerms() {
+        return new ArrayList<BigInteger>(terms);
     }
 
     /**
@@ -49,14 +59,14 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
      * continued fraction that is equal to this.
      */
     protected ContinuedFraction getExtendedContinuedFraction() {
-        List<Long> exTerms = new ArrayList<Long>(terms);
-        exTerms.set(exTerms.size() - 1, exTerms.get(terms.size() - 1) - 1);
-        exTerms.add(1L);
-        return ContinuedFraction.fromTerms(exTerms);
+        List<BigInteger> exTerms = new ArrayList<BigInteger>(terms);
+        exTerms.set(exTerms.size() - 1, exTerms.get(terms.size() - 1).subtract(BigInteger.ONE));
+        exTerms.add(BigInteger.ONE);
+        return ContinuedFraction.fromBigIntegerTerms(exTerms);
     }
 
     private static ContinuedFraction _bestWithinInterval(ContinuedFraction l, ContinuedFraction u) {
-        List<Long> terms = new ArrayList<Long>();
+        List<BigInteger> terms = new ArrayList<BigInteger>();
         // Make l the shortest sequence.
         if (l.terms.size() > u.terms.size()) {
             ContinuedFraction tmp = l;
@@ -69,13 +79,13 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
                 terms.add(l.terms.get(k));
             }
             else {
-                terms.add(1 + Math.min(l.terms.get(k), u.terms.get(k)));
-                return ContinuedFraction.fromTerms(terms);
+                terms.add(BigInteger.ONE.add( l.terms.get(k).min(u.terms.get(k)) ));
+                return ContinuedFraction.fromBigIntegerTerms(terms);
             }
         }
         // All terms up to k are equal, and k equals length(l).
-        terms.add(u.terms.get(k) + 1);
-        return ContinuedFraction.fromTerms(terms);
+        terms.add(u.terms.get(k).add(BigInteger.ONE));
+        return ContinuedFraction.fromBigIntegerTerms(terms);
     }
 
     private static ContinuedFraction _best(ContinuedFraction l, ContinuedFraction u, ContinuedFraction[] list) {
@@ -107,13 +117,13 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
         return _best(l, u, new ContinuedFraction[] { z0, z1, z2, z3 });
     }
 
-    private static List<Long> _eval(Fraction fraction) {
-        List<Long> terms = new ArrayList<Long>();
+    private static List<BigInteger> _eval(Fraction fraction) {
+        List<BigInteger> terms = new ArrayList<BigInteger>();
         while (true) {
-            long i = fraction.getNumerator() / fraction.getDenominator();
+            BigInteger i = fraction.getNumerator().divide(fraction.getDenominator());
             terms.add(i);
-            fraction = fraction.add(-i);
-            if (fraction.compareTo(zero) == 0) {
+            fraction = fraction.add(i.negate());
+            if (fraction.compareTo(Fraction.ZERO) == 0) {
                 break;
             }
             fraction = fraction.reciprocal();
@@ -121,7 +131,7 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
         return terms;
     }
 
-    private static Fraction _eval(List<Long> terms, int index) {
+    private static Fraction _eval(List<BigInteger> terms, int index) {
         if (index == terms.size()) {
             return new Fraction(0, 1);
         }
@@ -133,7 +143,7 @@ public class ContinuedFraction implements Comparable<ContinuedFraction> {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
         for (int j = 0; j < terms.size(); j++) {
-            sb.append(terms.get(j));
+            sb.append(terms.get(j).toString());
             if (j < terms.size() - 1) {
                 sb.append(", ");
             }

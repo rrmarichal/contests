@@ -33,7 +33,7 @@ public class ContinuedFractionToFraction {
                 while (tokenizer.hasMoreElements()) {
                     terms.add(Long.parseLong(tokenizer.nextToken()));
                 }
-                ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+                ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
                 Fraction fraction = cf.getFraction();
                 writer.println(String.format("Case #%d: %s", t + 1, fraction.toString()));
                 writer.flush();

@@ -1,5 +1,7 @@
 package continuedfractions;
 
+import java.math.BigInteger;
+
 import fractions.Fraction;
 
 public class Utils {
@@ -10,17 +12,17 @@ public class Utils {
      * better than that.
      */
     public static Fraction bestWithinInterval(Fraction l, Fraction u) {
-        Fraction median = Fraction.median(l, u);
-        for (long d = 1; d < median.getDenominator(); d++) {
-            long k = l.getNumerator() * d / l.getDenominator();
-            if (k * l.getDenominator() <= l.getNumerator() * d) {
-                k++;
+        for (long d = 1; d <= l.getDenominator().add(u.getDenominator()).longValue(); d++) {
+            BigInteger bd = BigInteger.valueOf(d);
+            BigInteger k = l.getNumerator().multiply(bd).divide(l.getDenominator());
+            if (k.multiply(l.getDenominator()).compareTo(l.getNumerator().multiply(bd)) <= 0) {
+                k = k.add(BigInteger.ONE);
             }
-            if (k * u.getDenominator() < d * u.getNumerator()) {
-                return new Fraction(k, d);
+            if (k.multiply(u.getDenominator()).compareTo(bd.multiply(u.getNumerator())) < 0) {
+                return new Fraction(k, bd);
             }
         }
-        return median;
+        return null;
     }
 
 }

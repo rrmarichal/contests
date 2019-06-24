@@ -3,6 +3,7 @@ package continuedfractions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,10 +21,10 @@ public class ContinuedFractionTests {
         terms.add(3L);
         terms.add(7L);
         terms.add(16L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(355, fraction.getNumerator());
-        assertEquals(113, fraction.getDenominator());
+        assertEquals(355, fraction.getNumerator().longValue());
+        assertEquals(113, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -33,10 +34,10 @@ public class ContinuedFractionTests {
         terms.add(7L);
         terms.add(15L);
         terms.add(2L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(688, fraction.getNumerator());
-        assertEquals(219, fraction.getDenominator());
+        assertEquals(688, fraction.getNumerator().longValue());
+        assertEquals(219, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -48,10 +49,10 @@ public class ContinuedFractionTests {
         terms.add(2L);
         terms.add(5L);
         terms.add(2L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(8234, fraction.getNumerator());
-        assertEquals(2621, fraction.getDenominator());
+        assertEquals(8234, fraction.getNumerator().longValue());
+        assertEquals(2621, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -63,10 +64,10 @@ public class ContinuedFractionTests {
         terms.add(2L);
         terms.add(5L);
         terms.add(1L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(4461, fraction.getNumerator());
-        assertEquals(1420, fraction.getDenominator());
+        assertEquals(4461, fraction.getNumerator().longValue());
+        assertEquals(1420, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -75,10 +76,10 @@ public class ContinuedFractionTests {
         terms.add(2L);
         terms.add(3L);
         terms.add(1L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(9, fraction.getNumerator());
-        assertEquals(4, fraction.getDenominator());
+        assertEquals(9, fraction.getNumerator().longValue());
+        assertEquals(4, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -87,10 +88,10 @@ public class ContinuedFractionTests {
         terms.add(1L);
         terms.add(3L);
         terms.add(1L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(5, fraction.getNumerator());
-        assertEquals(4, fraction.getDenominator());
+        assertEquals(5, fraction.getNumerator().longValue());
+        assertEquals(4, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -100,10 +101,10 @@ public class ContinuedFractionTests {
         terms.add(3L);
         terms.add(0L);
         terms.add(1L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(5, fraction.getNumerator());
-        assertEquals(4, fraction.getDenominator());
+        assertEquals(5, fraction.getNumerator().longValue());
+        assertEquals(4, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -112,10 +113,53 @@ public class ContinuedFractionTests {
         terms.add(-1L);
         terms.add(-4L);
         terms.add(-6L);
-        ContinuedFraction cf = ContinuedFraction.fromTerms(terms);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
         Fraction fraction = cf.getFraction();
-        assertEquals(-31, fraction.getNumerator());
-        assertEquals(25, fraction.getDenominator());
+        assertEquals(-31, fraction.getNumerator().longValue());
+        assertEquals(25, fraction.getDenominator().longValue());
+    }
+
+    @Test
+    public void termsToFractionTest8() {
+        List<Long> terms = new ArrayList<Long>();
+        terms.add(0L);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
+        Fraction fraction = cf.getFraction();
+        assertEquals(0, fraction.getNumerator().longValue());
+        assertEquals(1, fraction.getDenominator().longValue());
+    }
+
+    @Test
+    public void termsToFractionTest8a() {
+        List<Long> terms = new ArrayList<Long>();
+        terms.add(0L);
+        terms.add(0L);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
+        Fraction fraction = cf.getFraction();
+        assertEquals(1, fraction.getNumerator().longValue());
+        assertEquals(0, fraction.getDenominator().longValue());
+    }
+
+    @Test
+    public void termsToFractionTest8b() {
+        List<Long> terms = new ArrayList<Long>();
+        terms.add(1L);
+        terms.add(0L);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
+        Fraction fraction = cf.getFraction();
+        assertEquals(1, fraction.getNumerator().longValue());
+        assertEquals(0, fraction.getDenominator().longValue());
+    }
+
+    @Test
+    public void termsToFractionTest8c() {
+        List<Long> terms = new ArrayList<Long>();
+        terms.add(0L);
+        terms.add(1L);
+        ContinuedFraction cf = ContinuedFraction.fromLongTerms(terms);
+        Fraction fraction = cf.getFraction();
+        assertEquals(1, fraction.getNumerator().longValue());
+        assertEquals(1, fraction.getDenominator().longValue());
     }
 
     @Test
@@ -186,8 +230,8 @@ public class ContinuedFractionTests {
             cfu = ContinuedFraction.fromFraction(u);
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction best = bestcf.getFraction();
-        assertEquals(500000001, best.getNumerator());
-        assertEquals(500000000, best.getDenominator());
+        assertEquals(500000001, best.getNumerator().longValue());
+        assertEquals(500000000, best.getDenominator().longValue());
     }
 
     @Test
@@ -310,32 +354,60 @@ public class ContinuedFractionTests {
         assertEquals(best.getDenominator(), bestf.getDenominator());
     }
 
+    @Test
+    public void testIntervalf() {
+        Fraction l = new Fraction(35, 3);
+        Fraction u = new Fraction(415, 22);
+        ContinuedFraction cfl = ContinuedFraction.fromFraction(l),
+            cfu = ContinuedFraction.fromFraction(u);
+        ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
+        Fraction best = Utils.bestWithinInterval(l, u);
+        Fraction bestf = bestcf.getFraction();
+        assertEquals(best.getNumerator(), bestf.getNumerator());
+        assertEquals(best.getDenominator(), bestf.getDenominator());
+    }
+
+    @Test
+    public void testIntervalg() {
+        Fraction l = new Fraction(355, 179);
+        Fraction u = new Fraction(33860834966898755L, 17073491434012672L);
+        ContinuedFraction cfl = ContinuedFraction.fromFraction(l),
+            cfu = ContinuedFraction.fromFraction(u);
+        ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
+        Fraction bestf = bestcf.getFraction();
+        assertEquals(89440508844L, bestf.getNumerator().longValue());
+        assertEquals(45098172065L, bestf.getDenominator().longValue());
+    }
+
     /**
      * Generate two random fractions and compute the best fraction between them.
      */
     @Test
     public void bestWithinIntervalRandomTest() {
         Random random = new Random();
-        final int MAX = 1000;
-        for (int T = 0; T < 1000; T++) {
-            Fraction l = new Fraction(1 + random.nextInt(MAX), 1 + random.nextInt(MAX));
-            Fraction u = new Fraction(1 + random.nextInt(MAX), 1 + random.nextInt(MAX));
+        final int MAX = 1000, T = 100;
+        for (int t = 0; t < T; t++) {
+            Fraction l = new Fraction(1 + random.nextInt(MAX), 1 + random.nextInt(MAX)), u;
+            do {
+                u = new Fraction(1 + random.nextInt(MAX), 1 + random.nextInt(MAX));
+            }
+            while (l.compareTo(u) == 0);
             if (l.compareTo(u) > 0) {
                 Fraction tmp = l;
                 l = u;
                 u = tmp;
             }
             // Run a few iterations to make the fractions close to each other.
-            for (Fraction up = u; l.compareTo(up) < 0; u = up) {
-                up = l.add(u).divide(2);
+            for (int k = 0; k < 15; k++) {
+                u = l.add(u).divide(BigInteger.valueOf(2));
             }
             ContinuedFraction cfl = ContinuedFraction.fromFraction(l),
                 cfu = ContinuedFraction.fromFraction(u);
             ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
             Fraction bestf = bestcf.getFraction();
             Fraction best = Utils.bestWithinInterval(l, u);
-            // System.err.println(String.format("%s%s - %s%s: %s%s",
-            //     l.toString(), cfl.toString(), u.toString(), cfu.toString(), bestf.toString(), bestcf.toString()));
+            System.err.println(String.format("%s%s - %s%s: %s%s",
+                l.toString(), cfl.toString(), u.toString(), cfu.toString(), bestf.toString(), bestcf.toString()));
             assertEquals(best.getNumerator(), bestf.getNumerator());
             assertEquals(best.getDenominator(), bestf.getDenominator());
         }
@@ -349,14 +421,14 @@ public class ContinuedFractionTests {
         cflTerms.add(15L);
         cflTerms.add(2L);
         cflTerms.add(5L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(3L);
         cfuTerms.add(7L);
         cfuTerms.add(15L);
         cfuTerms.add(2L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -373,7 +445,7 @@ public class ContinuedFractionTests {
         cflTerms.add(15L);
         cflTerms.add(2L);
         cflTerms.add(5L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(3L);
@@ -381,7 +453,7 @@ public class ContinuedFractionTests {
         cfuTerms.add(15L);
         cfuTerms.add(2L);
         cfuTerms.add(6L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -398,13 +470,13 @@ public class ContinuedFractionTests {
         cflTerms.add(4L);
         cflTerms.add(4L);
         cflTerms.add(1L<<20);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(3L);
         cfuTerms.add(4L);
         cfuTerms.add(5L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -420,14 +492,14 @@ public class ContinuedFractionTests {
         cflTerms.add(3L);
         cflTerms.add(4L);
         cflTerms.add(4L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(3L);
         cfuTerms.add(4L);
         cfuTerms.add(5L);
         cfuTerms.add(500L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -442,13 +514,13 @@ public class ContinuedFractionTests {
         List<Long> cflTerms = new ArrayList<Long>();
         cflTerms.add(3L);
         cflTerms.add(5L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(3L);
         cfuTerms.add(4L);
         cfuTerms.add(500L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -463,13 +535,13 @@ public class ContinuedFractionTests {
         List<Long> cflTerms = new ArrayList<Long>();
         cflTerms.add(3L);
         cflTerms.add(5L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(3L);
         cfuTerms.add(4L);
         cfuTerms.add(1L<<20);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -485,12 +557,12 @@ public class ContinuedFractionTests {
         cflTerms.add(1L);
         cflTerms.add(2L);
         cflTerms.add(2L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
         cfuTerms.add(2L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -506,12 +578,12 @@ public class ContinuedFractionTests {
         cflTerms.add(1L);
         cflTerms.add(2L);
         cflTerms.add(500L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
         cfuTerms.add(2L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -527,14 +599,14 @@ public class ContinuedFractionTests {
         cflTerms.add(1L);
         cflTerms.add(2L);
         cflTerms.add(3L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
         cfuTerms.add(2L);
         cfuTerms.add(3L);
         cfuTerms.add(500L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -550,7 +622,7 @@ public class ContinuedFractionTests {
         cflTerms.add(1L);
         cflTerms.add(2L);
         cflTerms.add(3L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
@@ -558,7 +630,7 @@ public class ContinuedFractionTests {
         cfuTerms.add(3L);
         cfuTerms.add(500L);
         cfuTerms.add(1500L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -573,12 +645,12 @@ public class ContinuedFractionTests {
         List<Long> cflTerms = new ArrayList<Long>();
         cflTerms.add(1L);
         cflTerms.add(5L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
         cfuTerms.add(2L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -593,12 +665,12 @@ public class ContinuedFractionTests {
         List<Long> cflTerms = new ArrayList<Long>();
         cflTerms.add(1L);
         cflTerms.add(3L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
         cfuTerms.add(2L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -614,13 +686,13 @@ public class ContinuedFractionTests {
         cflTerms.add(1L);
         cflTerms.add(2L);
         cflTerms.add(2L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
         cfuTerms.add(2L);
         cfuTerms.add(5L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
@@ -636,13 +708,13 @@ public class ContinuedFractionTests {
         cflTerms.add(1L);
         cflTerms.add(2L);
         cflTerms.add(2L);
-        ContinuedFraction cfl = ContinuedFraction.fromTerms(cflTerms);
+        ContinuedFraction cfl = ContinuedFraction.fromLongTerms(cflTerms);
 
         List<Long> cfuTerms = new ArrayList<Long>();
         cfuTerms.add(1L);
         cfuTerms.add(2L);
         cfuTerms.add(3L);
-        ContinuedFraction cfu = ContinuedFraction.fromTerms(cfuTerms);
+        ContinuedFraction cfu = ContinuedFraction.fromLongTerms(cfuTerms);
 
         ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
         Fraction bestf = bestcf.getFraction();
