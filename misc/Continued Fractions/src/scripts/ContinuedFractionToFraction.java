@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import continuedfractions.ContinuedFraction;
-import continuedfractions.Fraction;
+import fractions.Fraction;
 
 /**
  * Read from standard input a list of continued fraction expressions given in the format

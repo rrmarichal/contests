@@ -10,7 +10,7 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 import continuedfractions.ContinuedFraction;
-import continuedfractions.Fraction;
+import fractions.Fraction;
 
 public class ContinuedFractionTests {
 
@@ -326,15 +326,16 @@ public class ContinuedFractionTests {
                 u = tmp;
             }
             // Run a few iterations to make the fractions close to each other.
-            for (Fraction up = u; l.compareTo(up) < 0; u = up, up = l.add(u).divide(2));
+            for (Fraction up = u; l.compareTo(up) < 0; u = up) {
+                up = l.add(u).divide(2);
+            }
             ContinuedFraction cfl = ContinuedFraction.fromFraction(l),
                 cfu = ContinuedFraction.fromFraction(u);
             ContinuedFraction bestcf = ContinuedFraction.bestWithinInterval(cfl, cfu);
             Fraction bestf = bestcf.getFraction();
             Fraction best = Utils.bestWithinInterval(l, u);
-
-            System.err.println(String.format("%s%s - %s%s: %s%s", l.toString(), cfl.toString(), u.toString(), cfu.toString(), bestf.toString(), bestcf.toString()));
-
+            // System.err.println(String.format("%s%s - %s%s: %s%s",
+            //     l.toString(), cfl.toString(), u.toString(), cfu.toString(), bestf.toString(), bestcf.toString()));
             assertEquals(best.getNumerator(), bestf.getNumerator());
             assertEquals(best.getDenominator(), bestf.getDenominator());
         }

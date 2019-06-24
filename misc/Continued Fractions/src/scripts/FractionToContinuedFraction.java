@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import continuedfractions.ContinuedFraction;
-import continuedfractions.Fraction;
+import fractions.Fraction;
 
 /**
  * Read from standard input a list of fraction expressions given in the format

@@ -2,6 +2,8 @@ package continuedfractions;
 
 import java.io.PrintWriter;
 
+import fractions.Fraction;
+
 public class Solution {
 
     private int T;

@@ -3,6 +3,8 @@ package continuedfractions;
 import java.util.List;
 import java.util.ArrayList;
 
+import fractions.Fraction;
+
 public class ContinuedFraction implements Comparable<ContinuedFraction> {
 
     private static final Fraction zero = new Fraction(0, 1);

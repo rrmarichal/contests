@@ -1,5 +1,7 @@
 package continuedfractions;
 
+import fractions.Fraction;
+
 public class Utils {
 
     /**
