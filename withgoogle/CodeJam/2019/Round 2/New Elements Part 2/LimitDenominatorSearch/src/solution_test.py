@@ -23,4 +23,6 @@ class Solution_Tests(unittest.TestCase):
     def test2(self):
         s0 = Solution(open("test_data/2.in"))
         result = s0.solve()
-        self.assertEqual(result[0], "Case #1: 83 100")
+        self.assertEqual(result[0], "Case #1: 8 29")
+        self.assertEqual(result[1], "Case #2: 2 9")
+        self.assertEqual(result[2], "Case #3: 83 100")
