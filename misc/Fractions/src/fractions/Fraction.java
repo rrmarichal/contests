@@ -1,7 +1,27 @@
-class Fraction implements Comparable<Fraction> {
+package fractions;
+
+public class Fraction implements Comparable<Fraction> {
 
     private long n, d;
     private int sign;
+
+    public static Fraction min(Fraction a, Fraction b) {
+        if (a == null || b == null) {
+            throw new IllegalArgumentException();
+        }
+        return a.compareTo(b) < 0 ? a : b;
+    }
+
+    public static Fraction max(Fraction a, Fraction b) {
+        if (a == null || b == null) {
+            throw new IllegalArgumentException();
+        }
+        return a.compareTo(b) > 0 ? a : b;
+    }
+
+    public static Fraction median(Fraction a, Fraction b) {
+        return new Fraction(a.n + b.n, a.d + b.d);
+    }
 
     public Fraction(long n, long d) {
         if (d == 0) {
@@ -19,7 +39,7 @@ class Fraction implements Comparable<Fraction> {
         }
         return _gcd(b, a % b);
     }
-
+ 
     public long getNumerator() {
         return n * sign;
     }
@@ -28,26 +48,12 @@ class Fraction implements Comparable<Fraction> {
         return d;
     }
 
-    public static Fraction min(Fraction a, Fraction b) {
-        if (a == null || b == null) {
+    public Fraction add(Fraction other) {
+        if (other == null) {
             throw new IllegalArgumentException();
         }
-        return a.compareTo(b) < 0 ? a : b;
-    }
-
-    public static Fraction max(Fraction a, Fraction b) {
-        if (a == null || b == null) {
-            throw new IllegalArgumentException();
-        }
-        return a.compareTo(b) > 0 ? a : b;
-    }
-
-    public Fraction add(Fraction ub) {
-        if (ub == null) {
-            throw new IllegalArgumentException();
-        }
-        long dd = d * ub.d;
-        long nn = ub.d * getNumerator() + d * ub.getNumerator();
+        long dd = d * other.d;
+        long nn = other.d * getNumerator() + d * other.getNumerator();
         return new Fraction(nn, dd);
     }
 
@@ -68,14 +74,14 @@ class Fraction implements Comparable<Fraction> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
+    public boolean equals(Object other) {
+        if (other == null) {
             return false;
         }
-        if (!(obj instanceof Fraction)) {
+        if (!(other instanceof Fraction)) {
             throw new IllegalArgumentException();
         }
-        return compareTo((Fraction) obj) == 0;
+        return compareTo((Fraction) other) == 0;
     }
 
     @Override
@@ -84,7 +90,7 @@ class Fraction implements Comparable<Fraction> {
             throw new IllegalArgumentException();
         }
         if (sign != other.sign) {
-            return sign;
+            return Integer.compare(sign, other.sign);
         }
         long cp1 = other.d * n;
         long cp2 = other.n * d;
@@ -97,3 +103,4 @@ class Fraction implements Comparable<Fraction> {
     }
 
 }
+

@@ -1,3 +1,5 @@
+package fractions;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Random;
