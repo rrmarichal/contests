@@ -1,5 +1,8 @@
 import java.util.*;
 
+/**
+ * Disjoint set implementation with path compression and ranks.
+ */
 public class DisjointSet {
 
     private List<Integer> parent, rank;
@@ -12,22 +15,25 @@ public class DisjointSet {
     }
 
     public int head(int item) {
-        if (parent.get(item) == -1)
-            return item;
+        if (parent.get(item) == -1) {
+			return item;
+		}
         parent.set(item, head(parent.get(item)));
         return parent.get(item);
     }
 
     public void merge(int a, int b) {
-        int ra = head(a), rb = head(b);
-        if (ra == rb)
-            return;
-        if (rank.get(ra) < rank.get(rb))
-            parent.set(ra, rb);
+        int ha = head(a), hb = head(b);
+        if (ha == hb) {
+			return;
+		}
+        if (rank.get(ha) < rank.get(hb)) {
+			parent.set(ha, hb);
+		}
         else {
-            parent.set(rb, ra);
-            if (rank.get(ra) == rank.get(rb))
-                rank.set(ra, rank.get(ra) + 1);
+            parent.set(hb, ha);
+            if (rank.get(ha) == rank.get(hb))
+                rank.set(ha, rank.get(ha) + 1);
         }
     }
     

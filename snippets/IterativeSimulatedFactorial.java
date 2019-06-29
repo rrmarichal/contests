@@ -10,7 +10,7 @@ class FactorialActivationRecord {
 	}
 }
 
-public class IterativeSimlatedFactorial {
+public class IterativeSimulatedFactorial {
 
 	public static void main(String[] args) {
 		Integer s = iterativeFactorial(5);
