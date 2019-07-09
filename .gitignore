@@ -3,7 +3,10 @@
 **/target/
 *.dll
 **/bin/
-**/obj/
+**/obj/Debug
+**/obj/*.csproj.nuget.cache
+**/obj/*.csproj.nuget.g.props
+**/obj/*.csproj.nuget.g.targets
 **/.settings/
 **/.vscode/
 *.in
