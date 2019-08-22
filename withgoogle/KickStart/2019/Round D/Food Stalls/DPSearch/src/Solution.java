@@ -86,15 +86,15 @@ public class Solution {
         T = in.nextInt();
         tests = new TestInfo[T];
         for (int t = 0; t < T; t++) {
-			int K = in.nextInt(), N = in.nextInt();
-			SpotInfo[] spots = new SpotInfo[N];
-			for (int j = 0; j < N; j++) {
-				spots[j] = new SpotInfo(in.nextInt());
-			}
-			for (int j = 0; j < N; j++) {
-				spots[j].C = in.nextInt();
-			}
-            tests[t] = new TestInfo(K, N, spots);
+		int K = in.nextInt(), N = in.nextInt();
+		SpotInfo[] spots = new SpotInfo[N];
+		for (int j = 0; j < N; j++) {
+			spots[j] = new SpotInfo(in.nextInt());
+		}
+		for (int j = 0; j < N; j++) {
+			spots[j].C = in.nextInt();
+		}
+		tests[t] = new TestInfo(K, N, spots);
         }
     }
 
