@@ -16,9 +16,9 @@ then
 
 ### Problem
 
-Find <code>x</code> such that <code>x $\equiv$ a<sub>i</sub> (mod n<sub>i</sub>)</code>.
+Find <code>a</code> such that <code>a $\equiv$ a<sub>i</sub> (mod n<sub>i</sub>)</code>.
 
-Let <code>n = n<sub>1</sub>  n<sub>2</sub> $\dots$ n<sub>K</sub></code>, <code>m<sub>i</sub> = n/n<sub>i</sub></code> and <code>c<sub>i</sub> = m<sub>i</sub>(m<sub>i</sub><sup>-1</sup> mod n<sub>i</sub>)</code> then <code>x = (a<sub>1</sub>c<sub>1</sub> + a<sub>2</sub>c<sub>2</sub> + $\dots$ + a<sub>K</sub>c<sub>K</sub>) </code> is a solution to the system of linear modular equations modulo <code>n</code>.
+Let <code>n = n<sub>1</sub>  n<sub>2</sub> $\dots$ n<sub>K</sub></code>, <code>m<sub>i</sub> = n/n<sub>i</sub></code> and <code>c<sub>i</sub> = m<sub>i</sub>(m<sub>i</sub><sup>-1</sup> mod n<sub>i</sub>)</code> then <code>a = (a<sub>1</sub>c<sub>1</sub> + a<sub>2</sub>c<sub>2</sub> + $\dots$ + a<sub>K</sub>c<sub>K</sub>) </code> is a solution to the system of linear modular equations modulo <code>n</code>.
 
 ### Input
 
