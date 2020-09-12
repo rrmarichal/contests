@@ -53,23 +53,31 @@ class InputReader {
     }
 }
 
-class TestInfo {
-	int N,  R, C, sr, sc;
-	String moves;
+class DogInfo implements Comparable<DogInfo> {
+	int color, offset;
 
-	public TestInfo(int N, int R, int C, int sr, int sc, String moves) {
-		this.N = N;
-		this.R = R;
-		this.C = C;
-		this.sr = sr;
-		this.sc = sc;
-		this.moves = moves;
+	public DogInfo(int offset) {
+		this.offset = offset;
+	}
+
+	@Override
+	public int compareTo(DogInfo o) {
+		return Integer.compare(offset, o.offset);
 	}
 }
 
-public class Solution {
+class TestInfo {
+	int N, K;
+	DogInfo[] dogs;
 
-	private static final int[][] MOVE = new int[][] { {-1, 0}, {1, 0}, {0, 1}, {0, -1} };
+    public TestInfo(int N, int K, DogInfo[] dogs) {
+		this.N = N;
+		this.K = K;
+		this.dogs = dogs;
+    }
+}
+
+public class Solution {
 
     private int T;
     private TestInfo[] tests;
@@ -78,44 +86,54 @@ public class Solution {
         T = in.nextInt();
         tests = new TestInfo[T];
         for (int t = 0; t < T; t++) {
-			int N = in.nextInt(), R = in.nextInt(), C = in.nextInt(), sr = in.nextInt(), sc = in.nextInt();
-			String moves = in.nextLine();
-            tests[t] = new TestInfo(N, R, C, sr, sc, moves);
+			int N = in.nextInt(), K = in.nextInt();
+			DogInfo[] dogs = new DogInfo[N];
+			for (int j = 0; j < N; j++) {
+				dogs[j] = new DogInfo(in.nextInt());
+			}
+			for (int j = 0; j < N; j++) {
+				dogs[j].color = in.nextInt();
+			}
+            tests[t] = new TestInfo(N, K, dogs);
         }
     }
 
-	private int _encode(int r, int c) {
-		return r * 50000 + c;
-	}
-
-	private int _index(char move) {
-		switch (move) {
-			case 'N': return 0;
-			case 'S': return 1;
-			case 'E': return 2;
-			default: return 3;
-		}
-	}
-
-	private String _solve(TestInfo test) {
-		HashSet<Integer> visited = new HashSet<Integer>();
-		int r = test.sr, c = test.sc;
-		visited.add(_encode(r, c));
+	private int _solve(TestInfo test) {
+		Arrays.sort(test.dogs);
+		int[][] T = new int[test.N][test.K + 1];
+		int best = Integer.MAX_VALUE;
 		for (int j = 0; j < test.N; j++) {
-			int index = _index(test.moves.charAt(j));
-			do {
-				r += MOVE[index][0];
-				c += MOVE[index][1];
-			} while (visited.contains(_encode(r, c)));
-			visited.add(_encode(r, c));
+			T[j][1] = test.dogs[j].offset;
 		}
-		return String.format("%d %d", r, c);
+		for (int k = 2; k <= test.K; k++) {
+			for (int j = 0; j < test.N; j++) {
+				T[j][k] = Integer.MAX_VALUE;
+				for (int p = 0; p < test.N; p++) {
+					if (p == j) {
+						continue;
+					}
+					if (T[p][k - 1] == 0) {
+						continue;
+					}
+					if (test.dogs[p].color != test.dogs[j].color) {
+						T[j][k] = Math.min(T[j][k], T[p][k - 1] + test.dogs[p].offset + test.dogs[j].offset);
+					}
+					else {
+						T[j][k] = Math.min(T[j][k], T[p][k - 1] + Math.abs(test.dogs[j].offset - test.dogs[p].offset));
+					}
+				}
+				if (k == test.K && T[j][k] < best) {
+					best = T[j][k];
+				}
+			}
+		}
+		return best;
 	}
 
     public String[] solve() {
         String[] result = new String[T];
         for (int t = 0; t < T; t++) {
-            result[t] = String.format("Case #%d: %s", t + 1, _solve(tests[t]));
+            result[t] = String.format("Case #%d: %d", t + 1, _solve(tests[t]));
         }
         return result;
     }

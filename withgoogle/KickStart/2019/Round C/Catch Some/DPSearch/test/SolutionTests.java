@@ -12,9 +12,9 @@ public class SolutionTests {
         Solution solution = new Solution(in);
         String[] result = solution.solve();
         assertArrayEquals(new String[] {
-            "Case #1: 3 2",
-			"Case #2: 3 3", 
-			"Case #3: 3 7"
+            "Case #1: 8",
+			"Case #2: 6",
+			"Case #3: 10028"
         }, result);
     }
 
