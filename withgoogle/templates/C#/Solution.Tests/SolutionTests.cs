@@ -13,5 +13,4 @@ public class SolutionTests {
 			"Case #3: "
 		}, result);
 	}
-
 }

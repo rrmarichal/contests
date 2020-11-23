@@ -68,12 +68,9 @@ public class InputReader {
 	}
 }
 
-class TestInfo {
-
-}
+class TestInfo {}
 
 public class Solution {
-
 	private int T;
 	private List<TestInfo> tests;
 
@@ -104,5 +101,4 @@ public class Solution {
 			Console.WriteLine(tcase);
 		}
 	}
-
 }
