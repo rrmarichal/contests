@@ -11,7 +11,6 @@
 **/.vscode/
 *.in
 *.out
-__labs__/
-__archive__/
+trash/
 **/__pycache__/
 **/.pytest_cache/
