@@ -14,3 +14,5 @@
 trash/
 **/__pycache__/
 **/.pytest_cache/
+__archive__
+__labs__
