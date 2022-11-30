@@ -54,13 +54,10 @@ class InputReader {
 }
 
 class TestInfo {
-    public TestInfo() {
-
-    }
+    public TestInfo() {}
 }
 
 public class Solution {
-
     private int T;
     private TestInfo[] tests;
 
@@ -90,5 +87,4 @@ public class Solution {
         }
         out.close();
     }
-
 }
