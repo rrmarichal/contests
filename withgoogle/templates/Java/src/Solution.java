@@ -58,10 +58,12 @@ class TestInfo {
 }
 
 public class Solution {
+    private PrintWriter out;
     private int T;
     private TestInfo[] tests;
 
-    protected Solution(InputReader in) {
+    protected Solution(InputReader in, PrintWriter out) {
+        this.out = out;
         T = in.nextInt();
         tests = new TestInfo[T];
         for (int t = 0; t < T; t++) {
@@ -69,22 +71,19 @@ public class Solution {
         }
     }
 
-    public String[] solve() {
-        String[] result = new String[T];
+    private int _solve(TestInfo test) {
+        return 0;
+    }
+
+    public void solve() {
         for (int t = 0; t < T; t++) {
-            result[t] = String.format("Case #%d: ?", t + 1);
+            out.println(String.format("Case #%d: %d", t + 1, _solve(tests[t])));
         }
-        return result;
+        out.close();
     }
 
     public static void main(String[] args) {
-        InputReader in = new InputReader(System.in);
-        PrintWriter out = new PrintWriter(System.out);
-        Solution solution = new Solution(in);
-        String[] result = solution.solve();
-        for (String c: result) {
-            out.println(c);
-        }
-        out.close();
+        Solution solution = new Solution(new InputReader(System.in), new PrintWriter(System.out));
+        solution.solve();
     }
 }
