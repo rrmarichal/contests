@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/rrmarichal/dev/contests/hackerrank/felix-pago/felix-pago.csproj": {}
+    "/Users/rrmarichal/dev/contests/hackerrank/minimum-loss/minimum-loss.csproj": {}
   },
   "projects": {
-    "/Users/rrmarichal/dev/contests/hackerrank/felix-pago/felix-pago.csproj": {
+    "/Users/rrmarichal/dev/contests/hackerrank/minimum-loss/minimum-loss.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/rrmarichal/dev/contests/hackerrank/felix-pago/felix-pago.csproj",
-        "projectName": "felix-pago",
-        "projectPath": "/Users/rrmarichal/dev/contests/hackerrank/felix-pago/felix-pago.csproj",
+        "projectUniqueName": "/Users/rrmarichal/dev/contests/hackerrank/minimum-loss/minimum-loss.csproj",
+        "projectName": "minimum-loss",
+        "projectPath": "/Users/rrmarichal/dev/contests/hackerrank/minimum-loss/minimum-loss.csproj",
         "packagesPath": "/Users/rrmarichal/.nuget/packages/",
-        "outputPath": "/Users/rrmarichal/dev/contests/hackerrank/felix-pago/obj/",
+        "outputPath": "/Users/rrmarichal/dev/contests/hackerrank/minimum-loss/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/rrmarichal/.nuget/NuGet/NuGet.Config"
