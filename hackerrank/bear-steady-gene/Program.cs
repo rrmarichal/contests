@@ -69,7 +69,7 @@ class Result {
         var memo = precomp(gene);
 
         while (l < r) {
-            var target = l + (r - l)/2;
+            var target = (l + r)/2;
             if (steady(gene, memo, target)) {
                 r = target;
             } else {
@@ -112,7 +112,9 @@ class Result {
         var result = index > 0 ? memo[index - 1] : new GeneCount(0, 0, 0, 0);
         if (index + count < gene.Length) {
             result = result.add(memo[gene.Length - 1]);
-            result = result.subtract(memo[index + count - 1]);
+            if (index + count > 0) {
+                result = result.subtract(memo[index + count - 1]);
+            }
         }
 
         return result;
