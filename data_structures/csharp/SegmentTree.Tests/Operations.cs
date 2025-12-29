@@ -1,6 +1,6 @@
 using System;
 
-namespace DataStructures.SegmentTree.Tests {
+namespace SegmentTree.Tests {
 
 	internal class MaxOperation : ISegmentTreeOperation {
 

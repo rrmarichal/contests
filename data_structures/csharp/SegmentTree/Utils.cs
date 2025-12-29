@@ -1,4 +1,4 @@
-namespace DataStructures {
+namespace SegmentTree {
 
 	public static class Utils {
 

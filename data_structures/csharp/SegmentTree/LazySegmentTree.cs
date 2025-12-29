@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataStructures.SegmentTree {
+namespace SegmentTree {
 
 	public class LazySegmentTree {
 

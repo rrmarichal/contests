@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DataStructures;
 using NUnit.Framework;
 
-namespace DataStructures.SegmentTree.Tests {
+namespace SegmentTree.Tests {
 
 	public class MaxLazySegmentTreeTests {
 
@@ -65,7 +64,7 @@ namespace DataStructures.SegmentTree.Tests {
 			// 2 3 -2 -3 9 1
 			Assert.AreEqual(9, tree.Query(0, values.Count - 1));
 			tree.Update(1, values.Count - 1, 2);
-			// 2 5 0 -1 11 3 
+			// 2 5 0 -1 11 3
 			Assert.AreEqual(11, tree.Query(0, values.Count - 1));
 			tree.Update(2, values.Count - 1, 3);
 			// 2 5 3 -2 14 6

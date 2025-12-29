@@ -1,4 +1,4 @@
-namespace DataStructures.SegmentTree {
+namespace SegmentTree {
 
 	public interface ISegmentTreeOperation {
 

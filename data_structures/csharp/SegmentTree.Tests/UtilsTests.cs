@@ -1,7 +1,6 @@
-using DataStructures;
 using NUnit.Framework;
 
-namespace DataStructures.Tests {
+namespace SegmentTree.Tests {
 
 	public class UtilsTests {
 

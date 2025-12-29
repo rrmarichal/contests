@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DataStructures;
 using NUnit.Framework;
 
-namespace DataStructures.SegmentTree.Tests {
+namespace SegmentTree.Tests {
 
 	public class MinLazySegmentTreeTests {
 

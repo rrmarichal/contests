@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructures", "DataStructures\DataStructures.csproj", "{85B1FD1E-431F-4B4B-A218-DEF646B469EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SegmentTree", "SegmentTree\SegmentTree.csproj", "{85B1FD1E-431F-4B4B-A218-DEF646B469EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructures.Tests", "DataStructures.Tests\DataStructures.Tests.csproj", "{8226EF9C-6C9B-45C8-87A2-7F265A34D5E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SegmentTree.Tests", "SegmentTree.Tests\SegmentTree.Tests.csproj", "{8226EF9C-6C9B-45C8-87A2-7F265A34D5E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializableDictionary", "SerializableDictionary\SerializableDictionary.csproj", "{2FF263ED-C9E5-47DA-A558-3AF093129084}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializableDictionary.Tests", "SerializableDictionary.Tests\SerializableDictionary.Tests.csproj", "{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,5 +48,29 @@ Global
 		{8226EF9C-6C9B-45C8-87A2-7F265A34D5E1}.Release|x64.Build.0 = Release|Any CPU
 		{8226EF9C-6C9B-45C8-87A2-7F265A34D5E1}.Release|x86.ActiveCfg = Release|Any CPU
 		{8226EF9C-6C9B-45C8-87A2-7F265A34D5E1}.Release|x86.Build.0 = Release|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Debug|x64.Build.0 = Debug|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Debug|x86.Build.0 = Debug|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Release|x64.ActiveCfg = Release|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Release|x64.Build.0 = Release|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Release|x86.ActiveCfg = Release|Any CPU
+		{2FF263ED-C9E5-47DA-A558-3AF093129084}.Release|x86.Build.0 = Release|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Debug|x64.Build.0 = Debug|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Debug|x86.Build.0 = Debug|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Release|x64.ActiveCfg = Release|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Release|x64.Build.0 = Release|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Release|x86.ActiveCfg = Release|Any CPU
+		{48DA03E2-CF9C-4BCE-8985-0740D9E37A6D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
