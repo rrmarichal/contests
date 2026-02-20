@@ -1,0 +1,1 @@
+You can also binary search on the solution. Search space from [min(A)..sum(A)] and validate in O(N)
