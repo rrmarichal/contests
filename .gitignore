@@ -1,4 +1,4 @@
-.DS_Store
+**/.DS_Store
 *.class
 **/target/
 *.dll
@@ -16,3 +16,14 @@ trash/
 **/.pytest_cache/
 __archive__
 __labs__
+**/node_modules/
+**/.clj-kondo/.cache/
+**/.lsp/.cache/
+**/.cpcache/
+**/.calva/output-window/
+**/.nrepl-port
+*.hi
+*.o
+*.dyn_hi
+*.dyn_o
+**/haskell/Main

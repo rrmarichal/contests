@@ -1,0 +1,3 @@
+;; Problem folders are numbers (200/, 514/, ...), and a namespace segment can't
+;; start with a digit, so namespaces can never mirror these paths.
+{:linters {:namespace-name-mismatch {:level :off}}}
